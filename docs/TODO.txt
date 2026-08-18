@@ -1,0 +1,18 @@
+[ ] add a login prompt on boot (optional)
+[ ] create our own keyring prompt
+[ ] improve boot time(systemd-analyze critical-chain)
+[ ] menu  config editor
+[x] emoji selector
+[ ] new email detector + notification client
+[x] settings app
+[x] individual menus with keybinds
+[x] todolist
+[x] fade when any audio resumes (bar/Right/Volume.qml pulse on streamActive)
+[x] single app notification collapse (NotificationService merge window 20s)
+[x] show focused app icon instead of the workspace number when opened (bar/Left/Workspaces.qml overlay)
+[x] combine mic + screen media (VolumeContent has output + input)
+[x] Add events in calender (fetch_events.sh)
+[x] Add custom location in weather, and even fix the automatic location to be precise (weather.sh auto + WidgetSettings.weatherLocation)
+[x] remove shell bar if on full screen (Bar.qml:41)
+[~] fix file manager xdg — VERIFIED WORKING: `xdg-mime query default inode/directory` → thunar.desktop, `xdg-open /tmp` launches thunar (only cosmetic GTK CSS warnings). Gap is just that the shell has no file-manager entry point; add one if desired.
+[x] add multi screen resolution auto/manual handler (scripts/monitors.sh + Settings → Monitors)

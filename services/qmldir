@@ -1,0 +1,6 @@
+singleton CaffeineService CaffeineService.qml
+singleton MenuService MenuService.qml
+singleton ProductivityService ProductivityService.qml
+singleton WeatherService WeatherService.qml
+singleton TranslateService TranslateService.qml
+singleton DynamicIslandService DynamicIslandService.qml

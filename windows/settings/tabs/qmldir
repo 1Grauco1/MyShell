@@ -1,0 +1,7 @@
+GeneralTab GeneralTab.qml
+BarTab BarTab.qml
+AppearanceTab AppearanceTab.qml
+BatteryTab BatteryTab.qml
+MediaTab MediaTab.qml
+HyprlandTab HyprlandTab.qml
+MonitorsTab MonitorsTab.qml

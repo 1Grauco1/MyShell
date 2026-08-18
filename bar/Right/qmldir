@@ -1,0 +1,7 @@
+Battery Battery.qml
+Network Network.qml
+Resources Resources.qml
+Tray Tray.qml
+TrayItem TrayItem.qml
+Update Update.qml
+QuickSettingsCluster QuickSettingsCluster.qml
