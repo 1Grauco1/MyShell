@@ -34,6 +34,8 @@ Scope {
         function media(): void { handleCommand("media"); }
         function mediaNext(): void { handleCommand("media-next"); }
         function mediaPrev(): void { handleCommand("media-prev"); }
+        function mediaShuffle(): void { handleCommand("media-shuffle"); }
+        function mediaPlay(): void { handleCommand("media-play"); }
     }
 
     // --- NATIVE HYPRLAND GLOBAL SHORTCUTS ---
@@ -50,6 +52,8 @@ Scope {
     GlobalShortcut { appid: "g_ant"; name: "media"; onPressed: handleCommand("media") }
     GlobalShortcut { appid: "g_ant"; name: "media-next"; onPressed: handleCommand("media-next") }
     GlobalShortcut { appid: "g_ant"; name: "media-prev"; onPressed: handleCommand("media-prev") }
+    GlobalShortcut { appid: "g_ant"; name: "media-shuffle"; onPressed: handleCommand("media-shuffle") }
+    GlobalShortcut { appid: "g_ant"; name: "media-play"; onPressed: handleCommand("media-play") }
     
     property bool settingsVisible: false
 
@@ -121,6 +125,16 @@ Scope {
         } else if (lowerAction === "media-prev") {
             let p = MediaPlayerService.trackedPlayer;
             if (p && p.canGoPrevious) p.previous();
+        } else if (lowerAction === "media-shuffle") {
+            let p = MediaPlayerService.trackedPlayer;
+            if (p && typeof p.shuffle === "boolean") p.shuffle = !p.shuffle;
+        } else if (lowerAction === "media-play") {
+            let p = MediaPlayerService.trackedPlayer;
+            if (p) {
+                if (p.canTogglePlaying) p.togglePlaying();
+                else if (p.canPause) p.pause();
+                else if (p.canPlay) p.play();
+            }
         }
     }
 
@@ -167,7 +181,6 @@ Scope {
     MediaPlayerPopup {
         id: mediaPlayerPopup
         parentWindow: bar
-        anchorX: bar.mediaHoverX
     }
 
     Loader {

@@ -11,4 +11,8 @@ QtObject {
     onAutoManageMediaFocusChanged: SettingsStore.set("media.autoManageMediaFocus", autoManageMediaFocus)
     property int barMargins: SettingsStore.get("media.barMargins", 10)
     onBarMarginsChanged: SettingsStore.set("media.barMargins", barMargins)
-    }
+    property bool showVolumeControl: SettingsStore.get("media.showVolumeControl", true)
+    onShowVolumeControlChanged: SettingsStore.set("media.showVolumeControl", showVolumeControl)
+    property bool showLoopControl: SettingsStore.get("media.showLoopControl", true)
+    onShowLoopControlChanged: SettingsStore.set("media.showLoopControl", showLoopControl)
+}

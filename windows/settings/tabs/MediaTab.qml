@@ -46,5 +46,21 @@ ColumnLayout {
         }
     }
 
+    SettingRow {
+        label: "Show Volume Control"
+        MaterialSwitch {
+            checked: MediaSettings.showVolumeControl
+            onClicked: MediaSettings.showVolumeControl = checked
+        }
+    }
+
+    SettingRow {
+        label: "Show Loop Control"
+        MaterialSwitch {
+            checked: MediaSettings.showLoopControl
+            onClicked: MediaSettings.showLoopControl = checked
+        }
+    }
+
     Item { Layout.fillHeight: true }
 }
