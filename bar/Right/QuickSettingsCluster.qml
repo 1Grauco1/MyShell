@@ -95,13 +95,9 @@ Item {
             }
 
             ClusterSubWidget {
-                visible: BluetoothService.powered
                 iconText: BluetoothService.powered ? Theme.btIcon : "󰂲"
                 iconColor: BluetoothService.connected ? Theme.bluetoothColor : (BluetoothService.powered ? Theme.fontColor : Theme.inactiveTextColor)
-                onClicked: {
-                    BluetoothService.refresh();
-                    QuickSettingsService.toggle("bluetooth");
-                }
+                onClicked: (mouse) => QuickSettingsService.toggle("bluetooth")
             }
 
             ClusterSubWidget {
