@@ -1,3 +1,4 @@
+pragma ComponentBehavior: Bound
 import QtQuick
 import Quickshell
 import Quickshell.Services.Mpris
@@ -48,7 +49,10 @@ Item {
         title = title.replace(/ — Mozilla Firefox$/i, "");
         title = title.replace(/ - Google Chrome$/i, "");
         
-        return title.trim() || "Media";
+        title = title.trim() || "Media";
+        if (MediaSettings.truncateTrackTitle && title.length > MediaSettings.maxTrackTitleLength)
+            title = title.slice(0, MediaSettings.maxTrackTitleLength) + "\u2026";
+        return title;
     }
 
     function formatMediaMetadata(fullText, limit, overflowThreshold) {
@@ -253,6 +257,8 @@ Item {
             }
         }
         delegate: Connections {
+            required property var modelData
+
             target: modelData
             
             function onPlaybackStateChanged() {

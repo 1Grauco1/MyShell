@@ -1,3 +1,4 @@
+pragma ComponentBehavior: Bound
 import QtQuick
 import QtQuick.Layouts
 import QtQuick.Controls
@@ -56,16 +57,6 @@ ColumnLayout {
             from: 0; to: 100; step: 2
             value: HyprlandSettings.shadowRange
             onValueModified: HyprlandSettings.shadowRange = value
-            Layout.preferredWidth: Shell.Theme.scaled(150)
-        }
-    }
-
-    SettingRow {
-        label: "Bar Margins"
-        NumberInput {
-            from: 0; to: 50; step: 1
-            value: HyprlandSettings.barMargins
-            onValueModified: HyprlandSettings.barMargins = value
             Layout.preferredWidth: Shell.Theme.scaled(150)
         }
     }

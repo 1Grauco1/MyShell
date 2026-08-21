@@ -1,3 +1,4 @@
+pragma ComponentBehavior: Bound
 //@ pragma UseQApplication
 import QtQuick
 import QtQuick.Layouts
@@ -22,7 +23,7 @@ Window {
         id: container
         anchors.fill: parent
         radius: 24
-        color: Shell.Theme.glassBackground
+        color: Shell.Theme.settingsBackground
         border.color: Shell.Theme.glassBorder
         border.width: 1
         
@@ -62,7 +63,7 @@ Window {
                         text: "G_ANT"
                         font.pixelSize: 28
                         font.weight: Font.Black
-                        color: Shell.Theme.text
+                        color: Shell.Colors.on_background
                         Layout.alignment: Qt.AlignHCenter
                         Layout.bottomMargin: 20
                     }
@@ -78,10 +79,13 @@ Window {
                             { name: "Monitors", icon: "󰹫" }
                         ]
                         delegate: Rectangle {
+                            required property int index
+                            required property var modelData
+
                             Layout.fillWidth: true
                             height: 50
                             radius: 14
-                            color: view.currentIndex === index ? Shell.Theme.surface1 : "transparent"
+                            color: view.currentIndex === index ? Shell.Colors.surface_variant : "transparent"
                             
                             RowLayout {
                                 anchors.fill: parent
@@ -91,13 +95,13 @@ Window {
                                     text: modelData.icon
                                     font.family: Shell.Theme.iconFont
                                     font.pixelSize: 20
-                                    color: view.currentIndex === index ? Shell.Theme.blue : Shell.Theme.subtext1
+                                    color: view.currentIndex === index ? Shell.Colors.primary : Shell.Colors.on_surface_variant
                                 }
                                 Text {
                                     text: modelData.name
                                     font.pixelSize: 15
                                     font.weight: view.currentIndex === index ? Font.Bold : Font.Normal
-                                    color: view.currentIndex === index ? Shell.Theme.text : Shell.Theme.subtext1
+                                    color: view.currentIndex === index ? Shell.Colors.on_background : Shell.Colors.on_surface_variant
                                 }
                             }
                             
@@ -117,14 +121,14 @@ Window {
                         flat: true
                         contentItem: Text {
                             text: parent.text
-                            color: parent.hovered ? "white" : Shell.Theme.subtext1
+                            color: parent.hovered ? "white" : Shell.Colors.on_surface_variant
                             font.bold: true
                             horizontalAlignment: Text.AlignHCenter
                         }
                         background: Rectangle {
                             radius: 12
-                            color: parent.hovered ? Shell.Theme.red : "transparent"
-                            border.color: parent.hovered ? "transparent" : Shell.Theme.surface1
+                            color: parent.hovered ? Shell.Colors.error : "transparent"
+                            border.color: parent.hovered ? "transparent" : Shell.Colors.surface_variant
                         }
                         onClicked: win.visible = false
                     }
