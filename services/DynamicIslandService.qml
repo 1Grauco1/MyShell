@@ -1,3 +1,4 @@
+pragma ComponentBehavior: Bound
 import QtQuick
 import Quickshell
 import Quickshell.Io
@@ -32,12 +33,12 @@ QtObject {
     readonly property var emojiCategories: ["All", "Smileys", "People", "Animals", "Food", "Activities", "Travel", "Objects", "Symbols", "Flags"]
 
     // --- HELPER PROCESSES ---
-    property var execProc: Process { id: execProc }
-    property var clipProc: Process { id: clipProc }
-    property var emojiProc: Process { id: emojiProc }
+    property Process execProc: Process { id: execProc }
+    property Process clipProc: Process { id: clipProc }
+    property Process emojiProc: Process { id: emojiProc }
 
     // Desktop entries connection
-    property var appConn: Connections {
+    property Connections appConn: Connections {
         target: DesktopEntries.applications
         function onValuesChanged() { root.rebuildAppCache(); }
         function onRowsInserted() { root.rebuildAppCache(); }
@@ -45,7 +46,7 @@ QtObject {
     }
 
     // App usage loader
-    property var loadUsageProc: Process {
+    property Process loadUsageProc: Process {
         id: loadUsage
         command: ["cat", root.storagePath]
         stdout: StdioCollector {
@@ -64,10 +65,10 @@ QtObject {
     }
 
     // App usage saver
-    property var saveUsageProc: Process { id: saveUsage }
+    property Process saveUsageProc: Process { id: saveUsage }
 
     // Cliphist loader
-    property var loadClipProc: Process {
+    property Process loadClipProc: Process {
         id: loadClip
         command: ["sh", "-c", "cliphist list"]
         stdout: StdioCollector {
@@ -78,7 +79,7 @@ QtObject {
     }
 
     // Emoji loader
-    property var loadEmojiProc: Process {
+    property Process loadEmojiProc: Process {
         id: loadEmoji
         command: ["cat", root.jsonPath]
         stdout: StdioCollector {
