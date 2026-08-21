@@ -1,7 +1,7 @@
+pragma ComponentBehavior: Bound
 pragma Singleton
 import "."
 import QtQuick
-import Quickshell
 import Quickshell.Io
 
 QtObject {
@@ -11,10 +11,13 @@ QtObject {
     property var values: ({})
     property bool _loaded: false
 
+    // Writes go through setText(), which is async and atomic (tmp file + rename)
+    // by default, replacing the old external python3 writer.
     readonly property var settingsFile: FileView {
         path: store.storePath
         blockLoading: true
         printErrors: false
+        onSaveFailed: (error) => console.warn("[SettingsStore]: save failed:", error)
     }
 
     property var saveTimer: Timer {
@@ -22,8 +25,6 @@ QtObject {
         interval: 500
         onTriggered: store.flush()
     }
-
-    property var writeProc: Process { id: writer }
 
     Component.onCompleted: ensureLoaded()
 
@@ -52,13 +53,6 @@ QtObject {
     }
 
     function flush() {
-        let payload = JSON.stringify(store.values);
-        writer.command = [
-            "python3", PathSettings.scriptsDir + "/write_file.py",
-            storePath,
-            payload
-        ];
-        writer.running = false;
-        writer.running = true;
+        settingsFile.setText(JSON.stringify(store.values));
     }
 }
