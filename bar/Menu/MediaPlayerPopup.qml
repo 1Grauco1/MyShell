@@ -1,3 +1,4 @@
+pragma ComponentBehavior: Bound
 import "../.."
 import "../../services"
 import "../../Settings"
@@ -15,6 +16,7 @@ PanelWindow {
     property var parentWindow: null
     property var _volumes: ({})
     property bool _windowVisible: false
+    property bool expanded: false
 
     readonly property var activePlayer: MediaPlayerService.trackedPlayer
     readonly property bool hasSeek: activePlayer != null && activePlayer.positionSupported && activePlayer.length > 0
@@ -59,6 +61,7 @@ PanelWindow {
             if (MediaPlayerService.mediaHoverOpen) {
                 closeAnim.stop();
                 _windowVisible = true;
+                root.expanded = false;
                 mainCard.opacity = 0;
                 mainCard.scale = 0.92;
                 showAnim.restart();
@@ -163,7 +166,8 @@ PanelWindow {
         parent: contentArea
         anchors.centerIn: parent
         width: Theme.scaled(360)
-        height: Theme.scaled(360)
+        height: Theme.scaled(root.expanded ? 444 : 400)
+        Behavior on height { NumberAnimation { duration: Theme.animFast; easing.type: Theme.animEasing } }
 
         color: Theme.glassBackground
         radius: Theme.cardRadius
@@ -181,6 +185,9 @@ PanelWindow {
         }
         Keys.onLeftPressed: { let p = MediaPlayerService.trackedPlayer; if (p && p.canGoPrevious) p.previous(); }
         Keys.onRightPressed: { let p = MediaPlayerService.trackedPlayer; if (p && p.canGoNext) p.next(); }
+        Keys.onSpacePressed: {
+            if (MediaPlayerService.mediaShortcutMode) root.togglePlayback();
+        }
         Keys.onEscapePressed: MediaPlayerService.closeMediaPopup()
 
         ColumnLayout {
@@ -196,7 +203,7 @@ PanelWindow {
                 Layout.preferredHeight: Theme.scaled(200)
                 Layout.alignment: Qt.AlignHCenter
                 radius: Theme.scaled(16)
-                color: Theme.surface1
+                color: Colors.surface_variant
                 clip: true
 
                 Image {
@@ -212,7 +219,7 @@ PanelWindow {
                     text: "󰎆"
                     font.family: Theme.iconFont
                     font.pixelSize: Theme.scaled(48)
-                    color: Theme.surface2
+                    color: Colors.outline
                     visible: !artImg.source || artImg.status !== Image.Ready
                 }
 
@@ -259,7 +266,7 @@ PanelWindow {
                             if (!p) return "Nothing playing";
                             return MediaPlayerService.formatMediaTitle(String(p.trackTitle || "Media"), p.identity);
                         }
-                        color: Theme.text
+                        color: Colors.on_background
                         font.pixelSize: Theme.scaled(15)
                         font.weight: Font.DemiBold
                         horizontalAlignment: Text.AlignHCenter
@@ -302,7 +309,7 @@ PanelWindow {
                         if (a && a !== "undefined") return a;
                         return String(p.identity || "");
                     }
-                    color: Theme.subtext0
+                    color: Colors.on_surface_variant
                         font.pixelSize: Theme.scaled(12)
                         elide: Text.ElideRight
                 }
@@ -315,7 +322,7 @@ PanelWindow {
 
                 Text {
                     text: root.formatTime(MediaPlayerService.currentPos)
-                    color: Theme.subtext0
+                    color: Colors.on_surface_variant
                     font.family: Constants.monoFont
                     font.pixelSize: Theme.scaled(10)
                     Layout.alignment: Qt.AlignVCenter
@@ -343,7 +350,7 @@ PanelWindow {
                             height: Theme.scaled(4)
                             width: posSlider.availableWidth
                             radius: Theme.scaled(2)
-                            color: Theme.surface1
+                            color: Colors.surface_variant
 
                             Rectangle {
                                 width: posSlider.visualPosition * parent.width
@@ -375,7 +382,7 @@ PanelWindow {
 
                         Rectangle {
                             width: Theme.scaled(5); height: Theme.scaled(5); radius: width / 2
-                            color: Theme.red
+                            color: Colors.error
                             SequentialAnimation on opacity {
                                 running: liveBadge.visible
                                 loops: Animation.Infinite
@@ -386,7 +393,7 @@ PanelWindow {
 
                         Text {
                             text: "LIVE"
-                            color: Theme.red
+                            color: Colors.error
                             font.family: Constants.monoFont
                             font.pixelSize: Theme.scaled(9)
                             font.weight: Font.DemiBold
@@ -397,7 +404,7 @@ PanelWindow {
                 Text {
                     visible: root.hasSeek
                     text: root.formatTime(root.activePlayer ? root.activePlayer.length : 0)
-                    color: Theme.subtext0
+                    color: Colors.on_surface_variant
                     font.family: Constants.monoFont
                     font.pixelSize: Theme.scaled(10)
                     Layout.alignment: Qt.AlignVCenter
@@ -418,7 +425,7 @@ PanelWindow {
                     onClicked: { let p = MediaPlayerService.trackedPlayer; if (p) p.previous(); }
                     contentItem: Text {
                         text: "󰒮"
-                        color: Theme.text
+                        color: Colors.on_background
                         font.family: Theme.iconFont
                         font.pixelSize: Theme.scaled(15)
                         horizontalAlignment: Text.AlignHCenter
@@ -455,7 +462,7 @@ PanelWindow {
                     onClicked: { let p = MediaPlayerService.trackedPlayer; if (p) p.next(); }
                     contentItem: Text {
                         text: "󰒭"
-                        color: Theme.text
+                        color: Colors.on_background
                         font.family: Theme.iconFont
                         font.pixelSize: Theme.scaled(15)
                         horizontalAlignment: Text.AlignHCenter
@@ -468,17 +475,19 @@ PanelWindow {
             // ============ Secondary controls ============
             RowLayout {
                 Layout.fillWidth: true
+                visible: root.expanded
                 spacing: Theme.scaled(6)
                 Layout.alignment: Qt.AlignHCenter
 
                 Button {
                     flat: true
-                    visible: root.shuffleSupported
+                    enabled: root.shuffleSupported
+                    opacity: enabled ? 1 : 0.3
                     implicitWidth: Theme.scaled(28); implicitHeight: Theme.scaled(28)
                     onClicked: root.toggleShuffle()
                     contentItem: Text {
                         text: "󰒤"
-                        color: root.shuffleActive ? Theme.accentColor : Theme.subtext0
+                        color: root.shuffleActive ? Theme.accentColor : Colors.on_surface_variant
                         font.family: Theme.iconFont
                         font.pixelSize: Theme.scaled(13)
                         horizontalAlignment: Text.AlignHCenter
@@ -491,10 +500,12 @@ PanelWindow {
                     flat: true
                     implicitWidth: Theme.scaled(28); implicitHeight: Theme.scaled(28)
                     onClicked: root.toggleMute()
-                    visible: root.volSupported && MediaSettings.showVolumeControl
+                    visible: MediaSettings.showVolumeControl
+                    enabled: root.volSupported
+                    opacity: enabled ? 1 : 0.3
                     contentItem: Text {
                         text: root.volIcon
-                        color: Theme.subtext0
+                        color: Colors.on_surface_variant
                         font.family: Theme.iconFont
                         font.pixelSize: Theme.scaled(13)
                         horizontalAlignment: Text.AlignHCenter
@@ -505,7 +516,9 @@ PanelWindow {
 
                 Slider {
                     id: volumeSlider
-                    visible: root.volSupported && MediaSettings.showVolumeControl
+                    visible: MediaSettings.showVolumeControl
+                    enabled: root.volSupported
+                    opacity: enabled ? 1 : 0.35
                     Layout.preferredWidth: Theme.scaled(70)
                     Layout.preferredHeight: Theme.scaled(16)
                     from: 0; to: 100
@@ -519,7 +532,7 @@ PanelWindow {
                             height: Theme.scaled(4)
                             width: volumeSlider.availableWidth
                             radius: Theme.scaled(2)
-                            color: Theme.surface1
+                            color: Colors.surface_variant
 
                             Rectangle {
                                 width: volumeSlider.visualPosition * parent.width
@@ -540,7 +553,9 @@ PanelWindow {
 
                 Button {
                     flat: true
-                    visible: root.loopSupported && MediaSettings.showLoopControl
+                    visible: MediaSettings.showLoopControl
+                    enabled: root.loopSupported
+                    opacity: enabled ? 1 : 0.3
                     implicitWidth: Theme.scaled(28); implicitHeight: Theme.scaled(28)
                     onClicked: root.cycleLoop()
                     contentItem: Text {
@@ -552,7 +567,7 @@ PanelWindow {
                             default: return "󰑗";
                             }
                         }
-                        color: root.activePlayer && root.activePlayer.loopState !== MprisLoopState.None ? Theme.accentColor : Theme.subtext0
+                        color: root.activePlayer && root.activePlayer.loopState !== MprisLoopState.None ? Theme.accentColor : Colors.on_surface_variant
                         font.family: Theme.iconFont
                         font.pixelSize: Theme.scaled(13)
                         horizontalAlignment: Text.AlignHCenter
@@ -564,6 +579,8 @@ PanelWindow {
                 Repeater {
                     model: Mpris.players.values
                     delegate: MouseArea {
+                        required property var modelData
+
                         width: Theme.scaled(16); height: Theme.scaled(16)
                         cursorShape: Qt.PointingHandCursor
                         onClicked: MediaPlayerService.updateTrackedPlayer(modelData, true)
@@ -572,9 +589,30 @@ PanelWindow {
                             width: (MediaPlayerService.trackedPlayer === modelData) ? Theme.scaled(10) : Theme.scaled(6)
                             height: width
                             radius: width / 2
-                            color: (MediaPlayerService.trackedPlayer === modelData) ? Theme.accentColor : (modelData.playbackState === MprisPlaybackState.Playing ? Theme.green : Theme.surface2)
+                            color: (MediaPlayerService.trackedPlayer === modelData) ? Theme.accentColor : (modelData.playbackState === MprisPlaybackState.Playing ? Colors.tertiary : Colors.outline)
                         }
                     }
+                }
+            }
+
+            // ============ Expand / collapse toggle ============
+            Item {
+                Layout.fillWidth: true
+                Layout.preferredHeight: Theme.scaled(18)
+
+                Text {
+                    anchors.centerIn: parent
+                    text: root.expanded ? "" : ""
+                    font.family: Theme.iconFont
+                    font.pixelSize: Theme.scaled(16)
+                    color: Colors.on_surface_variant
+                }
+
+                MouseArea {
+                    anchors.fill: parent
+                    anchors.margins: -Theme.scaled(8)
+                    cursorShape: Qt.PointingHandCursor
+                    onClicked: root.expanded = !root.expanded
                 }
             }
         }
