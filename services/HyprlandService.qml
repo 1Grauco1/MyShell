@@ -1,3 +1,4 @@
+pragma ComponentBehavior: Bound
 import QtQuick
 import Quickshell
 import Quickshell.Hyprland
@@ -68,12 +69,11 @@ Item {
         }
         
         // 3. Size-based fallback for apps that don't report fullscreen flags
-        if (win) {
+        if (win && !win.floating) {
             const mon = Hyprland.monitorFor(win.monitor);
             if (mon && mon.width > 0 && mon.height > 0) {
-                // Check if window fills the monitor (with a small 15px margin)
-                const isFullSize = Math.abs(win.width - mon.width) < 15 && 
-                                   Math.abs(win.height - mon.height) < 15;
+                const isFullSize = Math.abs(win.width - mon.width) <= 2 &&
+                                   Math.abs(win.height - mon.height) <= 2;
                 if (isFullSize) return true;
             }
         }
