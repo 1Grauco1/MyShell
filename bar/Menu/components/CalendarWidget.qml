@@ -1,3 +1,4 @@
+pragma ComponentBehavior: Bound
 import QtQuick
 import QtQuick.Controls 2.15
 import QtQuick.Layouts
@@ -62,7 +63,7 @@ Rectangle {
     implicitWidth: Theme.scaled(340)
     color: Theme.menuBackground
     radius: Theme.scaled(16)
-    border.color: Theme.surface1
+    border.color: Colors.surface_variant
     border.width: 1
 
     ColumnLayout {
@@ -78,7 +79,7 @@ Rectangle {
                 spacing: 0
                 Label {
                     text: Qt.formatDateTime(root.viewDate, "MMMM yyyy")
-                    color: Theme.text
+                    color: Colors.on_background
                     font.pixelSize: Theme.scaled(17)
                     font.weight: Font.Bold
                 }
@@ -99,14 +100,14 @@ Rectangle {
                 implicitHeight: Theme.scaled(30)
                 onClicked: root.toggleEvents()
                 background: Rectangle {
-                    color: root.showAllEvents ? Theme.accentColor : Theme.surface0
+                    color: root.showAllEvents ? Theme.accentColor : Colors.surface_variant
                     radius: Theme.scaled(8)
                     border.color: Theme.glassBorder
                     border.width: 1
                 }
                 contentItem: Text {
                     text: root.showAllEvents ? "Calendar" : "Holidays"
-                    color: root.showAllEvents ? "#ffffff" : Theme.accentColor
+                    color: root.showAllEvents ? Colors.on_primary : Theme.accentColor
                     font.pixelSize: Theme.scaled(11)
                     font.bold: true
                     horizontalAlignment: Text.AlignHCenter
@@ -120,14 +121,14 @@ Rectangle {
                 Button {
                     flat: true; implicitWidth: Theme.scaled(30); implicitHeight: Theme.scaled(30)
                     onClicked: root.prevMonth()
-                    background: Rectangle { color: parent.hovered ? Theme.surface1 : "transparent"; radius: Theme.scaled(6) }
-                    contentItem: Text { text: "󰁍"; color: Theme.subtext0; font.pixelSize: Theme.scaled(15); horizontalAlignment: Text.AlignHCenter; verticalAlignment: Text.AlignVCenter }
+                    background: Rectangle { color: parent.hovered ? Colors.surface_variant : "transparent"; radius: Theme.scaled(6) }
+                    contentItem: Text { text: "󰁍"; color: Colors.on_surface_variant; font.pixelSize: Theme.scaled(15); horizontalAlignment: Text.AlignHCenter; verticalAlignment: Text.AlignVCenter }
                 }
                 Button {
                     flat: true; implicitWidth: Theme.scaled(30); implicitHeight: Theme.scaled(30)
                     onClicked: root.nextMonth()
-                    background: Rectangle { color: parent.hovered ? Theme.surface1 : "transparent"; radius: Theme.scaled(6) }
-                    contentItem: Text { text: "󰁔"; color: Theme.subtext0; font.pixelSize: Theme.scaled(15); horizontalAlignment: Text.AlignHCenter; verticalAlignment: Text.AlignVCenter }
+                    background: Rectangle { color: parent.hovered ? Colors.surface_variant : "transparent"; radius: Theme.scaled(6) }
+                    contentItem: Text { text: "󰁔"; color: Colors.on_surface_variant; font.pixelSize: Theme.scaled(15); horizontalAlignment: Text.AlignHCenter; verticalAlignment: Text.AlignVCenter }
                 }
             }
         }
@@ -152,10 +153,12 @@ Rectangle {
                         spacing: Theme.scaled(6)
                         model: root.eventData || []
                         delegate: Rectangle {
+                            required property var modelData
+
                             width: ListView.view.width - Theme.scaled(8)
                             height: Theme.scaled(40)
                             radius: Theme.scaled(8)
-                            color: Theme.surface0
+                            color: Colors.surface_variant
                             border.color: Theme.glassBorder
                             border.width: 1
 
@@ -175,7 +178,7 @@ Rectangle {
                                     spacing: 0
                                     Text {
                                         text: modelData.name
-                                        color: Theme.text
+                                        color: Colors.on_background
                                         font.bold: true
                                         font.pixelSize: Theme.scaled(11)
                                         elide: Text.ElideRight
@@ -183,7 +186,7 @@ Rectangle {
                                     }
                                     Text {
                                         text: modelData.date
-                                        color: Theme.subtext0
+                                        color: Colors.on_surface_variant
                                         font.pixelSize: Theme.scaled(9)
                                     }
                                 }
@@ -205,9 +208,11 @@ Rectangle {
                 Repeater {
                     model: ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"]
                     delegate: Label {
+                        required property var modelData
+
                         text: modelData; Layout.fillWidth: true
                         horizontalAlignment: Text.AlignHCenter
-                        color: Theme.subtext1; font.pixelSize: Theme.scaled(11); font.weight: Font.Black
+                        color: Colors.on_surface_variant; font.pixelSize: Theme.scaled(11); font.weight: Font.Black
                     }
                 }
 
@@ -215,6 +220,8 @@ Rectangle {
                     model: 35
                     delegate: Rectangle {
                         id: dayCell
+                        required property int index
+
                         readonly property var dateValue: {
                             let firstDay = new Date(root.viewDate.getFullYear(), root.viewDate.getMonth(), 1);
                             return new Date(root.viewDate.getFullYear(), root.viewDate.getMonth(), index - firstDay.getDay() + 1);
@@ -241,7 +248,7 @@ Rectangle {
                         }
 
                         border.color: {
-                            if (isSelected) return "#ffffff";
+                            if (isSelected) return Colors.on_surface;
                             if (isToday) return Theme.accentColor;
                             return "transparent";
                         }
@@ -253,10 +260,10 @@ Rectangle {
                             font.pixelSize: Theme.scaled(12)
                             font.bold: dayCell.isToday || dayCell.isSelected || dayCell.hasEvent
                             color: {
-                                if (!dayCell.isCurrentMonth) return Theme.surface2;
+                                if (!dayCell.isCurrentMonth) return Colors.outline;
                                 if (dayCell.hasEvent) return Theme.accentColor;
-                                if (dayCell.isToday) return "#ffffffff";
-                                return Theme.text;
+                                if (dayCell.isToday) return Colors.on_surface;
+                                return Colors.on_background;
                             }
                         }
 
@@ -274,7 +281,7 @@ Rectangle {
         Rectangle {
             Layout.fillWidth: true
             implicitHeight: Theme.scaled(32)
-            color: Theme.surface0
+            color: Colors.surface_variant
             radius: Theme.scaled(8)
             visible: !root.showAllEvents
             border.color: Theme.glassBorder
@@ -287,7 +294,7 @@ Rectangle {
 
                 Text {
                     text: Qt.formatDate(root.selectedDate, "yyyy-MM-dd")
-                    color: Theme.subtext0
+                    color: Colors.on_surface_variant
                     font.bold: true
                     font.pixelSize: Theme.scaled(10)
                 }
@@ -304,7 +311,7 @@ Rectangle {
                     color: {
                         let dateStr = Qt.formatDate(root.selectedDate, "yyyy-MM-dd");
                         let events = root.eventData.filter(e => e.date === dateStr);
-                        return events.length > 0 ? Theme.accentColor : Theme.subtext1;
+                        return events.length > 0 ? Theme.accentColor : Colors.on_surface_variant;
                     }
                     font.bold: true
                     font.pixelSize: Theme.scaled(11)

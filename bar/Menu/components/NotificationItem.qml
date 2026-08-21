@@ -1,3 +1,4 @@
+pragma ComponentBehavior: Bound
 import QtQuick
 import QtQuick.Controls 2.15
 import QtQuick.Layouts
@@ -129,9 +130,9 @@ Rectangle {
             Layout.preferredHeight: Theme.scaled(50)
             Layout.alignment: Qt.AlignVCenter 
             
-            color: Theme.mantle
+            color: Colors.surface
             radius: Theme.scaled(12)
-            border.color: Theme.surface1
+            border.color: Colors.surface_variant
             border.width: 1
 
             Image {
@@ -190,7 +191,7 @@ Rectangle {
 
             Label {
                 text: notification ? (notification.summary || "Notification") : ""
-                color: "#ffffff"
+                color: Colors.on_surface
                 font.bold: true
                 font.pixelSize: Theme.scaled(13)
                 elide: root.realHovered ? Text.ElideNone : Text.ElideRight
@@ -200,7 +201,7 @@ Rectangle {
 
             Label {
                 text: notification ? (notification.body || "") : ""
-                color: Theme.subtext0
+                color: Colors.on_surface_variant
                 font.pixelSize: Theme.scaled(11)
                 wrapMode: root.realHovered ? Text.Wrap : Text.NoWrap
                 elide: root.realHovered ? Text.ElideNone : Text.ElideRight
@@ -253,15 +254,15 @@ Rectangle {
         Rectangle {
             anchors.fill: parent
             radius: Theme.scaled(8)
-            color: dismissMouse.containsMouse ? Theme.surface0 : "transparent"
-            border.color: dismissMouse.containsMouse ? Theme.surface1 : "transparent"
+            color: dismissMouse.containsMouse ? Colors.surface_variant : "transparent"
+            border.color: dismissMouse.containsMouse ? Colors.surface_variant : "transparent"
             border.width: 1
             Behavior on color { ColorAnimation { duration: 100 } }
             
             Text {
                 anchors.centerIn: parent
                 text: "󰅖"
-                color: dismissMouse.containsMouse ? Theme.powerRed : Theme.subtext0
+                color: dismissMouse.containsMouse ? Theme.powerRed : Colors.on_surface_variant
                 font.pixelSize: Theme.scaled(16)
             }
         }

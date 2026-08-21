@@ -1,3 +1,4 @@
+pragma ComponentBehavior: Bound
 import "../.."
 import "../../services"
 import "../../Settings"
@@ -148,6 +149,8 @@ PanelWindow {
 
                         delegate: Rectangle {
                             id: tabRect
+                            required property var modelData
+
                             Layout.fillWidth: true
                             Layout.fillHeight: true
                             radius: 999
@@ -165,7 +168,7 @@ PanelWindow {
                                     text: modelData.icon
                                     font.family: Theme.iconFont
                                     font.pixelSize: Theme.scaled(16)
-                                    color: QuickSettingsService.activeTab === modelData.id ? Colors.on_primary : "#ffffff"
+                                    color: QuickSettingsService.activeTab === modelData.id ? Colors.on_primary : Colors.on_surface_variant
                                     Layout.alignment: Qt.AlignVCenter
                                 }
                                 Text {
@@ -174,7 +177,7 @@ PanelWindow {
                                     font.weight: Font.Bold
                                     font.letterSpacing: 0.5
                                     visible: QuickSettingsService.activeTab === modelData.id || !Theme.isSmallScreen
-                                    color: QuickSettingsService.activeTab === modelData.id ? Colors.on_primary : "#ffffff"
+                                    color: QuickSettingsService.activeTab === modelData.id ? Colors.on_primary : Colors.on_surface_variant
                                     Layout.alignment: Qt.AlignVCenter
                                 }
                             }

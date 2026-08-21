@@ -1,3 +1,4 @@
+pragma ComponentBehavior: Bound
 import QtQuick
 import QtQuick.Layouts
 import QtQuick.Controls
@@ -119,7 +120,7 @@ PanelWindow {
 
                 Text { 
                     text: "DASHBOARD"
-                    color: "#ffffff"
+                    color: Colors.on_surface
                     font.pixelSize: Theme.scaled(12.5)
                     font.weight: Font.Black
                     font.letterSpacing: 2
@@ -143,6 +144,8 @@ PanelWindow {
                             model: ["Default", "Pomodoro", "Wallpaper", "Translate"]
                             delegate: Rectangle {
                                 id: tabRect
+                                required property var modelData
+
                                 width: Math.max(Theme.scaled(82), tabText.implicitWidth + Theme.scaled(18))
                                 height: Theme.scaled(30)
                                 radius: 999
@@ -158,7 +161,7 @@ PanelWindow {
                                     text: modelData
                                     font.pixelSize: Theme.scaled(11)
                                     font.weight: Font.Bold
-                                    color: CenterState.activeTab === modelData ? Colors.on_primary : "#ffffff"
+                                    color: CenterState.activeTab === modelData ? Colors.on_primary : Colors.on_surface_variant
                                 }
                                 MouseArea { 
                                     id: tabMouse
@@ -190,7 +193,7 @@ PanelWindow {
                         text: MediaPlayerService.mediaFocus ? "󰎆" : "󰎇"
                         font.family: Theme.iconFont
                         font.pixelSize: Theme.scaled(17)
-                        color: MediaPlayerService.mediaFocus ? Colors.on_primary : "#ffffff"
+                        color: MediaPlayerService.mediaFocus ? Colors.on_primary : Colors.on_surface
                     }
                     MouseArea { 
                         id: focusMouse
@@ -217,7 +220,7 @@ PanelWindow {
                         text: CaffeineService.active ? "󰅶" : "󰛊"
                         font.family: Theme.iconFont
                         font.pixelSize: Theme.scaled(17)
-                        color: CaffeineService.active ? Colors.on_primary : "#ffffff"
+                        color: CaffeineService.active ? Colors.on_primary : Colors.on_surface
                     }
                     MouseArea { 
                         id: caffeineMouse
@@ -267,10 +270,10 @@ PanelWindow {
                                 RowLayout {
                                     Layout.fillWidth: true; spacing: Theme.scaled(8)
                                     Text { text: "󰂚"; font.family: Theme.iconFont; color: Theme.accentColor; font.pixelSize: Theme.scaled(16) }
-                                    Text { text: "NOTIFICATIONS"; color: Theme.subtext0; font.pixelSize: Theme.scaled(10); font.weight: Font.Black; font.letterSpacing: 1 }
+                                    Text { text: "NOTIFICATIONS"; color: Colors.on_surface_variant; font.pixelSize: Theme.scaled(10); font.weight: Font.Black; font.letterSpacing: 1 }
                                     Rectangle {
                                         width: Theme.scaled(22); height: Theme.scaled(22); radius: 999
-                                        color: Theme.surface1
+                                        color: Colors.surface_variant
                                         Label {
                                             anchors.centerIn: parent
                                             text: NotificationService.notifications.count
@@ -291,10 +294,10 @@ PanelWindow {
                                             Text {
                                                 text: NotificationSettings.fullscreenNotification ? "󰊓" : "󰊔"
                                                 font.family: Theme.iconFont
-                                                color: NotificationSettings.fullscreenNotification ? Theme.accentColor : "#ffffff"
+                                                color: NotificationSettings.fullscreenNotification ? Theme.accentColor : Colors.on_surface
                                                 font.pixelSize: 13
                                             }
-                                            Text { text: "NOTIFY"; font.pixelSize: 9; font.weight: Font.Black; color: "#ffffff" }
+                                            Text { text: "NOTIFY"; font.pixelSize: 9; font.weight: Font.Black; color: Colors.on_surface }
                                         }
                                         background: Rectangle { color: fullscreenBtn.hovered ? Qt.rgba(255,255,255,0.1) : "transparent"; radius: 999 }
                                         onClicked: NotificationSettings.fullscreenNotification = !NotificationSettings.fullscreenNotification
@@ -309,10 +312,10 @@ PanelWindow {
                                             Text {
                                                 text: NotificationSettings.fullscreenOSD ? "󰊓" : "󰊔"
                                                 font.family: Theme.iconFont
-                                                color: NotificationSettings.fullscreenOSD ? Theme.accentColor : "#ffffff"
+                                                color: NotificationSettings.fullscreenOSD ? Theme.accentColor : Colors.on_surface
                                                 font.pixelSize: 13
                                             }
-                                            Text { text: "OSD"; font.pixelSize: 9; font.weight: Font.Black; color: "#ffffff" }
+                                            Text { text: "OSD"; font.pixelSize: 9; font.weight: Font.Black; color: Colors.on_surface }
                                         }
                                         background: Rectangle { color: osdFullscreenBtn.hovered ? Qt.rgba(255,255,255,0.1) : "transparent"; radius: 999 }
                                         onClicked: NotificationSettings.fullscreenOSD = !NotificationSettings.fullscreenOSD
@@ -321,7 +324,7 @@ PanelWindow {
                                         id: clearBtn
                                         flat: true
                                         padding: Theme.scaled(3)
-                                        contentItem: Text { text: "󰃢"; font.family: Theme.iconFont; color: "#ffffff"; font.pixelSize: Theme.scaled(15) }
+                                        contentItem: Text { text: "󰃢"; font.family: Theme.iconFont; color: Colors.on_surface; font.pixelSize: Theme.scaled(15) }
                                         background: Rectangle { color: clearBtn.hovered ? Qt.rgba(255,255,255,0.1) : "transparent"; radius: 999 }
                                         onClicked: NotificationService.clearAll()
                                     }
@@ -349,7 +352,7 @@ PanelWindow {
                                 RowLayout {
                                     Layout.fillWidth: true; spacing: Theme.scaled(8)
                                     Text { text: "󰎆"; font.family: Theme.iconFont; color: Theme.accentColor; font.pixelSize: Theme.scaled(16) }
-                                    Text { text: "MEDIA PLAYER"; color: Theme.subtext0; font.pixelSize: Theme.scaled(10); font.weight: Font.Black; font.letterSpacing: 1 }
+                                    Text { text: "MEDIA PLAYER"; color: Colors.on_surface_variant; font.pixelSize: Theme.scaled(10); font.weight: Font.Black; font.letterSpacing: 1 }
 
                                     Item { Layout.fillWidth: true }
                                 }
@@ -373,7 +376,7 @@ PanelWindow {
                             RowLayout {
                                 spacing: Theme.scaled(8)
                                 Text { text: "󰃭"; font.family: Theme.iconFont; color: Theme.accentColor; font.pixelSize: Theme.scaled(16) }
-                                Text { text: "CALENDAR"; color: Theme.subtext0; font.pixelSize: Theme.scaled(10); font.weight: Font.Black; font.letterSpacing: 1 }
+                                Text { text: "CALENDAR"; color: Colors.on_surface_variant; font.pixelSize: Theme.scaled(10); font.weight: Font.Black; font.letterSpacing: 1 }
                             }
                             CalendarWidget { Layout.fillWidth: true; Layout.fillHeight: true }
                         }
@@ -388,7 +391,7 @@ PanelWindow {
                             RowLayout {
                                 spacing: Theme.scaled(8)
                                 Text { text: "󰖐"; font.family: Theme.iconFont; color: Theme.accentColor; font.pixelSize: Theme.scaled(16) }
-                                Text { text: "WEATHER"; color: Theme.subtext0; font.pixelSize: Theme.scaled(10); font.weight: Font.Black; font.letterSpacing: 1 }
+                                Text { text: "WEATHER"; color: Colors.on_surface_variant; font.pixelSize: Theme.scaled(10); font.weight: Font.Black; font.letterSpacing: 1 }
                             }
                             WeatherWidget {
                                 Layout.fillWidth: true; Layout.fillHeight: true

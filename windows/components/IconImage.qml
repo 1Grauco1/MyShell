@@ -1,3 +1,4 @@
+pragma ComponentBehavior: Bound
 import QtQuick
 import Quickshell
 import "../../" as Shell // To access Theme
@@ -31,9 +32,9 @@ Item {
     Rectangle {
         anchors.fill: parent
         visible: root.showLetter
-        color: (Shell.Theme && Shell.Theme.surface0) ? Shell.Theme.surface0 : "#252525"
+        color: Shell.Colors.surface_variant
         radius: width / 4
-        border.color: (Shell.Theme && Shell.Theme.surface1) ? Shell.Theme.surface1 : "#353535"
+        border.color: Shell.Colors.surface_variant
         border.width: 1
 
         Text {
@@ -41,7 +42,7 @@ Item {
             text: (root.appName && root.appName !== "") ? root.appName.charAt(0).toUpperCase() : "?"
             font.pixelSize: parent.height * 0.6
             font.bold: true
-            color: (Shell.Theme && Shell.Theme.text) ? Shell.Theme.text : "#cba6f7"
+            color: Shell.Colors.on_background
         }
     }
 }
