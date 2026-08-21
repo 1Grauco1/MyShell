@@ -1,6 +1,6 @@
+pragma ComponentBehavior: Bound
 //@ pragma UseQApplication
 import QtQuick
-import QtQml 2.15
 import Quickshell
 import Quickshell.Hyprland
 import Quickshell.Io
@@ -117,6 +117,7 @@ Scope {
         } else if (lowerAction === "close" || lowerAction === "close_all") {
             MenuService.closeAll();
             DynamicIslandService.close();
+            settingsVisible = false;
         } else if (lowerAction === "media") {
             MediaPlayerService.toggleMediaPopup();
         } else if (lowerAction === "media-next") {
@@ -159,21 +160,12 @@ Scope {
 
     Loader {
         id: controlCenterLoader
-        active: false
+        active: CenterState.qsVisible
         sourceComponent: Component {
             ControlCenter {
                 parentWindow: bar
                 visible: CenterState.qsVisible
                 Component.onCompleted: CenterState.menuRef = this
-            }
-        }
-        Connections {
-            target: CenterState
-            function onQsVisibleChanged() {
-                if (CenterState.qsVisible && !controlCenterLoader.active)
-                    controlCenterLoader.active = true;
-                else if (!CenterState.qsVisible && controlCenterLoader.active)
-                    controlCenterLoader.active = false;
             }
         }
     }
@@ -185,21 +177,12 @@ Scope {
 
     Loader {
         id: quickSettingsLoader
-        active: false
+        active: QuickSettingsService.qsVisible
         sourceComponent: Component {
             QuickSettingsMenu {
                 parentWindow: bar
                 visible: QuickSettingsService.qsVisible
                 Component.onCompleted: QuickSettingsService.menuRef = this
-            }
-        }
-        Connections {
-            target: QuickSettingsService
-            function onQsVisibleChanged() {
-                if (QuickSettingsService.qsVisible && !quickSettingsLoader.active)
-                    quickSettingsLoader.active = true;
-                else if (!QuickSettingsService.qsVisible && quickSettingsLoader.active)
-                    quickSettingsLoader.active = false;
             }
         }
     }
@@ -217,19 +200,10 @@ Scope {
 
     Loader {
         id: dynamicIslandLoader
-        active: false
+        active: DynamicIslandService.active
         sourceComponent: Component {
             DynamicIslandOverlay {
                 visible: DynamicIslandService.active
-            }
-        }
-        Connections {
-            target: DynamicIslandService
-            function onActiveChanged() {
-                if (DynamicIslandService.active && !dynamicIslandLoader.active)
-                    dynamicIslandLoader.active = true;
-                else if (!DynamicIslandService.active && dynamicIslandLoader.active)
-                    dynamicIslandLoader.active = false;
             }
         }
     }
@@ -239,7 +213,7 @@ Scope {
         active: settingsVisible
         sourceComponent: Component {
             SettingsWindow {
-                Component.onCompleted: visible = true
+                Component.onCompleted: show()
                 onVisibleChanged: {
                     if (!visible) settingsVisible = false;
                 }
