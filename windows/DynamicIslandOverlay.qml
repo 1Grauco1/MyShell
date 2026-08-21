@@ -1,3 +1,4 @@
+pragma ComponentBehavior: Bound
 import QtQuick
 import QtQuick.Controls
 import Quickshell
@@ -103,7 +104,7 @@ PanelWindow {
                 height: Math.max(54, DynamicIslandService.displayedApps.length * 52 + 12)
                 radius: Shell.Theme.scaled(14)
                 visible: DynamicIslandService.activeMode === "launcher"
-                color: (Shell.Colors && Shell.Colors.surface_container_low) ? Shell.Colors.surface_container_low : "#221a15"
+                color: Shell.Theme.glassBackground
                 border.color: Shell.Theme.glassBorder
                 border.width: 1
 
@@ -136,11 +137,11 @@ PanelWindow {
                         readonly property bool isSelected: index === DynamicIslandService.selectedIndex
 
                         color: isSelected
-                            ? ((Shell.Colors && Shell.Colors.primary_container) ? Shell.Colors.primary_container : "#6f3812")
+                            ? Shell.Colors.primary_container
                             : (hoverArea.containsMouse ? Shell.Theme.surfaceContainerHigh : "transparent")
 
                         border.color: isSelected
-                            ? ((Shell.Colors && Shell.Colors.primary) ? Shell.Colors.primary : Shell.Theme.accentColor)
+                            ? Shell.Colors.primary
                             : "transparent"
                         border.width: isSelected ? 1 : 0
 
@@ -191,7 +192,7 @@ PanelWindow {
 
                                 Text {
                                     text: (appDelegate.modelData && appDelegate.modelData.name) ? appDelegate.modelData.name : "Unknown"
-                                    color: appDelegate.isSelected ? Shell.Theme.accentColor : Shell.Theme.text
+                                    color: appDelegate.isSelected ? Shell.Theme.accentColor : Shell.Colors.on_background
                                     font.pixelSize: Shell.Theme.scaled(13)
                                     font.weight: appDelegate.isSelected ? Font.Bold : Font.Medium
                                     elide: Text.ElideRight
@@ -200,7 +201,7 @@ PanelWindow {
 
                                 Text {
                                     text: (appDelegate.modelData) ? (appDelegate.modelData.genericName || appDelegate.modelData.comment || "") : ""
-                                    color: Shell.Theme.subtext0
+                                    color: Shell.Colors.on_surface_variant
                                     font.pixelSize: Shell.Theme.scaled(11)
                                     maximumLineCount: 1
                                     elide: Text.ElideRight
@@ -216,7 +217,7 @@ PanelWindow {
                     anchors.centerIn: parent
                     visible: DynamicIslandService.displayedApps.length === 0
                     text: DynamicIslandService.query.trim() === "" ? "Type to search applications..." : "No applications found"
-                    color: Shell.Theme.subtext0
+                    color: Shell.Colors.on_surface_variant
                     font.pixelSize: Shell.Theme.scaled(13)
                 }
             }
@@ -227,7 +228,7 @@ PanelWindow {
                 height: Math.min(360, Math.max(54, DynamicIslandService.displayedClips.length * 48 + 12))
                 radius: Shell.Theme.scaled(14)
                 visible: DynamicIslandService.activeMode === "clipboard"
-                color: (Shell.Colors && Shell.Colors.surface_container_low) ? Shell.Colors.surface_container_low : "#221a15"
+                color: Shell.Theme.glassBackground
                 border.color: Shell.Theme.glassBorder
                 border.width: 1
 
@@ -259,11 +260,11 @@ PanelWindow {
                         readonly property bool isSelected: index === DynamicIslandService.selectedIndex
 
                         color: isSelected
-                            ? ((Shell.Colors && Shell.Colors.primary_container) ? Shell.Colors.primary_container : "#6f3812")
+                            ? Shell.Colors.primary_container
                             : (clipHover.containsMouse ? Shell.Theme.surfaceContainerHigh : "transparent")
 
                         border.color: isSelected
-                            ? ((Shell.Colors && Shell.Colors.primary) ? Shell.Colors.primary : Shell.Theme.accentColor)
+                            ? Shell.Colors.primary
                             : "transparent"
                         border.width: isSelected ? 1 : 0
 
@@ -289,13 +290,13 @@ PanelWindow {
                                 text: "󰅍"
                                 font.family: Shell.Theme.iconFont
                                 font.pixelSize: Shell.Theme.scaled(14)
-                                color: clipDelegate.isSelected ? Shell.Theme.accentColor : Shell.Theme.subtext0
+                                color: clipDelegate.isSelected ? Shell.Theme.accentColor : Shell.Colors.on_surface_variant
                                 anchors.verticalCenter: parent.verticalCenter
                             }
 
                             Text {
                                 text: (clipDelegate.modelData && clipDelegate.modelData.preview) ? clipDelegate.modelData.preview : ""
-                                color: clipDelegate.isSelected ? Shell.Theme.text : Shell.Theme.subtext0
+                                color: clipDelegate.isSelected ? Shell.Colors.on_background : Shell.Colors.on_surface_variant
                                 font.pixelSize: Shell.Theme.scaled(12)
                                 elide: Text.ElideRight
                                 width: parent.width - 60
@@ -306,7 +307,7 @@ PanelWindow {
                                 text: "󰆴"
                                 font.family: Shell.Theme.iconFont
                                 font.pixelSize: Shell.Theme.scaled(13)
-                                color: delMouse.containsMouse ? Shell.Theme.powerRed : Shell.Theme.subtext0
+                                color: delMouse.containsMouse ? Shell.Theme.powerRed : Shell.Colors.on_surface_variant
                                 anchors.verticalCenter: parent.verticalCenter
 
                                 MouseArea {
@@ -329,7 +330,7 @@ PanelWindow {
                     anchors.centerIn: parent
                     visible: DynamicIslandService.displayedClips.length === 0
                     text: "No clipboard history found"
-                    color: Shell.Theme.subtext0
+                    color: Shell.Colors.on_surface_variant
                     font.pixelSize: Shell.Theme.scaled(13)
                 }
             }
@@ -340,7 +341,7 @@ PanelWindow {
                 height: 320
                 radius: Shell.Theme.scaled(14)
                 visible: DynamicIslandService.activeMode === "emoji"
-                color: (Shell.Colors && Shell.Colors.surface_container_low) ? Shell.Colors.surface_container_low : "#221a15"
+                color: Shell.Theme.glassBackground
                 border.color: Shell.Theme.glassBorder
                 border.width: 1
 
@@ -376,6 +377,8 @@ PanelWindow {
                                     height: 24
                                     width: catText.implicitWidth + 15
                                     radius: 12
+                                    required property var modelData
+
                                     color: DynamicIslandService.selectedCategory === modelData
                                         ? Shell.Theme.accentColor
                                         : (catMouse.containsMouse ? Shell.Theme.surfaceContainerHigh : "transparent")
@@ -389,8 +392,8 @@ PanelWindow {
                                         font.pixelSize: Shell.Theme.scaled(11)
                                         font.weight: DynamicIslandService.selectedCategory === modelData ? Font.Bold : Font.Normal
                                         color: DynamicIslandService.selectedCategory === modelData
-                                            ? ((Shell.Colors && Shell.Colors.on_primary) ? Shell.Colors.on_primary : "#ffffff")
-                                            : Shell.Theme.text
+                                            ? Shell.Colors.on_primary
+                                            : Shell.Colors.on_background
                                     }
 
                                     MouseArea {
@@ -457,7 +460,7 @@ PanelWindow {
                             anchors.centerIn: parent
                             visible: DynamicIslandService.displayedEmojis.length === 0
                             text: "No emojis found"
-                            color: Shell.Theme.subtext0
+                            color: Shell.Colors.on_surface_variant
                             font.pixelSize: Shell.Theme.scaled(13)
                         }
                     }
