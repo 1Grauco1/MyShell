@@ -1,3 +1,4 @@
+pragma ComponentBehavior: Bound
 import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
@@ -36,14 +37,14 @@ ColumnLayout {
                 text: "Monitors"
                 font.pixelSize: Shell.Theme.scaled(20)
                 font.weight: Font.Bold
-                color: Shell.Theme.text
+                color: Shell.Colors.on_background
                 Layout.fillWidth: true
             }
             Rectangle {
                 width: Shell.Theme.scaled(80)
                 height: Shell.Theme.scaled(32)
                 radius: Shell.Theme.scaled(8)
-                color: refreshMouse.containsMouse ? Shell.Theme.blue : Shell.Theme.surface1
+                color: refreshMouse.containsMouse ? Shell.Colors.primary : Shell.Colors.surface_variant
                 Text {
                     anchors.centerIn: parent
                     text: "Refresh"
@@ -76,6 +77,8 @@ ColumnLayout {
 
                 delegate: SettingRow {
                     id: monitorRow
+                    required property var modelData
+
                     readonly property var mon: modelData
                     readonly property string savedRes: SettingsStore.get("monitor." + mon.name + ".resolution", "Native")
                     label: mon.name + "   " + mon.width + "x" + mon.height + "@" + mon.refreshRate + (mon.focused ? "   ●" : "")
@@ -98,7 +101,7 @@ ColumnLayout {
                             width: Shell.Theme.scaled(64)
                             height: Shell.Theme.scaled(32)
                             radius: Shell.Theme.scaled(8)
-                            color: applyMouse.containsMouse ? Shell.Theme.blue : Shell.Theme.surface1
+                            color: applyMouse.containsMouse ? Shell.Colors.primary : Shell.Colors.surface_variant
                             Text {
                                 anchors.centerIn: parent
                                 text: "Apply"
@@ -138,7 +141,7 @@ ColumnLayout {
                 Text {
                     anchors.centerIn: parent
                     text: "No monitors detected (hyprctl missing?)"
-                    color: Shell.Theme.subtext1
+                    color: Shell.Colors.on_surface_variant
                     font.pixelSize: Shell.Theme.scaled(14)
                 }
             }

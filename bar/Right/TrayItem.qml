@@ -1,3 +1,4 @@
+pragma ComponentBehavior: Bound
 // bar/Right/TrayItem.qml
 //
 // Design note: this deliberately does NOT try to move windows between
@@ -145,8 +146,8 @@ MouseArea {
         width: Theme.scaled(6)
         height: Theme.scaled(6)
         radius: width / 2
-        color: Theme.red
-        border.color: Theme.surface0
+        color: Colors.error
+        border.color: Colors.surface_variant
         border.width: 1
         visible: root.item !== undefined && root.item !== null && (root.item.status === Status.NeedsAttention || root.item.status === 2)
 
@@ -194,7 +195,7 @@ MouseArea {
                     var itemId = String(root.item.id || "").trim();
                     return title ? title : (tooltip ? tooltip : itemId);
                 }
-                color: Theme.text
+                color: Colors.on_background
                 font.pixelSize: Theme.scaled(10)
                 font.weight: Font.Medium
             }

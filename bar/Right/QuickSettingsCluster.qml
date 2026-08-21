@@ -1,3 +1,4 @@
+pragma ComponentBehavior: Bound
 // bar/Right/QuickSettingsCluster.qml
 import ".."
 import "../.."
@@ -48,7 +49,7 @@ Item {
             ClusterSubWidget {
                 visible: VolumeService.micActive
                 iconText: VolumeService.micMuted ? "\uf131" : "\uf130"
-                iconColor: VolumeService.micMuted ? Theme.red : Theme.accentColor
+                iconColor: VolumeService.micMuted ? Colors.error : Theme.accentColor
                 onClicked: {
                     micMuteExec.running = false;
                     micMuteExec.running = true;

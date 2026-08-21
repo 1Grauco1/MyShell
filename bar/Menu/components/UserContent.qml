@@ -1,3 +1,4 @@
+pragma ComponentBehavior: Bound
 import QtQuick
 import QtQuick.Layouts
 import QtQuick.Controls
@@ -32,8 +33,8 @@ Rectangle {
         RowLayout {
             Layout.fillWidth: true
             spacing: Shell.Theme.scaled(10)
-            Text { text: ""; font.family: Shell.Theme.iconFont; color: Shell.Theme.blue; font.pixelSize: Shell.Theme.scaled(16) }
-            Text { text: "USER PROFILE"; color: Shell.Theme.text; font.pixelSize: Shell.Theme.scaled(14); font.weight: Font.Black }
+            Text { text: ""; font.family: Shell.Theme.iconFont; color: Shell.Colors.primary; font.pixelSize: Shell.Theme.scaled(16) }
+            Text { text: "USER PROFILE"; color: Shell.Colors.on_background; font.pixelSize: Shell.Theme.scaled(14); font.weight: Font.Black }
         }
 
         // Profile Card
@@ -51,7 +52,7 @@ Rectangle {
 
                 Rectangle {
                     width: Shell.Theme.scaled(100); height: Shell.Theme.scaled(100); radius: Shell.Theme.scaled(50)
-                    color: Shell.Theme.surface1
+                    color: Shell.Colors.surface_variant
                     clip: true
                     
                     Image {
@@ -75,7 +76,7 @@ Rectangle {
                         anchors.centerIn: parent
                         text: "󰄛"
                         font.pixelSize: Shell.Theme.scaled(40)
-                        color: Shell.Theme.blue
+                        color: Shell.Colors.primary
                         visible: true
                     }
                     
@@ -101,12 +102,12 @@ Rectangle {
 
                 ColumnLayout {
                     spacing: 5
-                    Text { text: "Welcome, " + (Services.UserService.username || "User"); color: Shell.Theme.text; font.pixelSize: Shell.Theme.scaled(20); font.bold: true }
+                    Text { text: "Welcome, " + (Services.UserService.username || "User"); color: Shell.Colors.on_background; font.pixelSize: Shell.Theme.scaled(20); font.bold: true }
                     RowLayout {
                         spacing: 5
-                        Text { id: locText; text: "Living in: " + (Services.UserService.location || "Unknown"); color: Shell.Theme.subtext1; font.pixelSize: Shell.Theme.scaled(14) }
+                        Text { id: locText; text: "Living in: " + (Services.UserService.location || "Unknown"); color: Shell.Colors.on_surface_variant; font.pixelSize: Shell.Theme.scaled(14) }
                         Text { 
-                            text: "(wrong? click here)"; color: Shell.Theme.blue; font.pixelSize: Shell.Theme.scaled(10); font.underline: true 
+                            text: "(wrong? click here)"; color: Shell.Colors.primary; font.pixelSize: Shell.Theme.scaled(10); font.underline: true 
                             MouseArea {
                                 anchors.fill: parent
                                 onClicked: Services.SettingsService.toggle(7)

@@ -1,3 +1,4 @@
+pragma ComponentBehavior: Bound
 import QtQuick
 import QtQuick.Controls
 import "../../../" as Shell
@@ -13,12 +14,12 @@ Slider {
         implicitWidth: Shell.Theme.scaled(150)
         implicitHeight: Shell.Theme.scaled(2)
         radius: Shell.Theme.scaled(20)
-        color: Shell.Theme.surface1
+        color: Shell.Colors.surface_variant
         
         Rectangle {
             width: control.visualPosition * parent.width
             height: parent.height
-            color: Shell.Theme.blue
+            color: Shell.Colors.primary
             radius: Shell.Theme.scaled(2)
         }
     }
@@ -29,6 +30,6 @@ Slider {
         implicitWidth: Shell.Theme.scaled(16)
         implicitHeight: Shell.Theme.scaled(16)
         radius: Shell.Theme.scaled(8)
-        color: Shell.Theme.text
+        color: Shell.Colors.on_background
     }
 }

@@ -1,3 +1,4 @@
+pragma ComponentBehavior: Bound
 import QtQuick
 import QtQuick.Controls
 import "../../../" as Shell
@@ -7,7 +8,7 @@ Rectangle {
     width: Shell.Theme.scaled(150)
     height: Shell.Theme.scaled(32)
     radius: Shell.Theme.scaled(8)
-    color: Shell.Theme.surface1
+    color: Shell.Colors.surface_variant
     
     property var model: []
     property int currentIndex: 0
@@ -16,7 +17,7 @@ Rectangle {
     Text {
         anchors.centerIn: parent
         text: control.model[control.currentIndex]
-        color: Shell.Theme.text
+        color: Shell.Colors.on_background
     }
 
     MouseArea {

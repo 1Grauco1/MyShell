@@ -1,3 +1,4 @@
+pragma ComponentBehavior: Bound
 import QtQuick
 import QtQuick.Layouts
 import QtQuick.Controls
@@ -20,7 +21,7 @@ ColumnLayout {
             text: "Appearance"
             font.pixelSize: Shell.Theme.scaled(20)
             font.weight: Font.Bold
-            color: Shell.Theme.text
+            color: Shell.Colors.on_background
         }
     }
     

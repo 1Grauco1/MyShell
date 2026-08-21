@@ -1,3 +1,4 @@
+pragma ComponentBehavior: Bound
 import QtQuick
 import QtQuick.Layouts
 import QtQuick.Controls
@@ -124,7 +125,7 @@ Item {
                 }
                 Text {
                     text: "TRANSLATE"
-                    color: Theme.subtext0
+                    color: Colors.on_surface_variant
                     font.pixelSize: Theme.scaled(10)
                     font.weight: Font.Black
                     font.letterSpacing: 1
@@ -132,7 +133,7 @@ Item {
                 Item { Layout.fillWidth: true }
                 Text {
                     text: TranslateService.translating ? "Translating..." : (TranslateService.result?.detectedLang && root.sourceCode === "auto" ? "Detected: " + root.langName(TranslateService.result.detectedLang) : "")
-                    color: Theme.subtext0
+                    color: Colors.on_surface_variant
                     font.pixelSize: Theme.scaled(10)
                     font.weight: Font.Bold
                     opacity: (TranslateService.translating || (TranslateService.result?.detectedLang && root.sourceCode === "auto")) ? 1 : 0
@@ -156,10 +157,10 @@ Item {
                     padding: 0
                     wrapMode: TextEdit.Wrap
                     selectByMouse: true
-                    color: Theme.text
+                    color: Colors.on_background
                     font.pixelSize: Theme.scaled(12)
                     placeholderText: "Type or paste text to translate..."
-                    placeholderTextColor: Theme.subtext0
+                    placeholderTextColor: Colors.on_surface_variant
                     focus: true
                 }
             }
@@ -193,7 +194,7 @@ Item {
                         text: "󰚦"
                         font.family: Theme.iconFont
                         font.pixelSize: Theme.scaled(14)
-                        color: Theme.text
+                        color: Colors.on_background
                     }
                     MouseArea {
                         id: swapMouse
@@ -278,7 +279,7 @@ Item {
                         }
                         Text {
                             text: "RESULT"
-                            color: Theme.subtext0
+                            color: Colors.on_surface_variant
                             font.pixelSize: Theme.scaled(10)
                             font.weight: Font.Black
                             font.letterSpacing: 1
@@ -287,7 +288,7 @@ Item {
 
                         Text {
                             text: TranslateService.result?.translatedText ? root.langName(root.targetCode) : ""
-                            color: Theme.subtext0
+                            color: Colors.on_surface_variant
                             font.pixelSize: Theme.scaled(9)
                             font.weight: Font.Bold
                         }
@@ -305,7 +306,7 @@ Item {
                                 text: root.copied ? "󰄱" : "󰅌"
                                 font.family: Theme.iconFont
                                 font.pixelSize: Theme.scaled(13)
-                                color: root.copied ? Theme.powerGreen : Theme.text
+                                color: root.copied ? Theme.powerGreen : Colors.on_background
                             }
                             MouseArea {
                                 id: copyMouse
@@ -325,12 +326,12 @@ Item {
                         wrapMode: TextEdit.Wrap
                         selectByMouse: true
                         readOnly: true
-                        color: Theme.text
+                        color: Colors.on_background
                         font.pixelSize: Theme.scaled(13)
                         font.weight: Font.Medium
                         text: TranslateService.result?.translatedText || ""
                         placeholderText: "Translation will appear here..."
-                        placeholderTextColor: Theme.subtext0
+                        placeholderTextColor: Colors.on_surface_variant
                     }
                 }
             }

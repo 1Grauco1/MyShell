@@ -1,3 +1,4 @@
+pragma ComponentBehavior: Bound
 import "../.."
 import "../../../"
 import "../../../services"
@@ -27,7 +28,7 @@ ColumnLayout {
 
     Text {
         text: "ENERGY STATION"
-        color: Theme.blue
+        color: Colors.primary
         font.pixelSize: 10
         font.weight: Font.Black
         font.letterSpacing: 2
@@ -56,7 +57,7 @@ ColumnLayout {
                     text: BatteryService.acOnline ? "󱐋" : "󰁹"
                     font.family: Theme.iconFont
                     font.pixelSize: Theme.scaled(32)
-                    color: BatteryService.acOnline ? Theme.powerGreen : Theme.blue
+                    color: BatteryService.acOnline ? Theme.powerGreen : Colors.primary
                 }
             }
 
@@ -64,20 +65,20 @@ ColumnLayout {
                 spacing: 5; Layout.fillWidth: true
                 RowLayout {
                     spacing: 15
-                    Text { text: BatteryService.percentage + "%"; font.pixelSize: Theme.scaled(38); font.weight: Font.Black; color: Theme.text }
+                    Text { text: BatteryService.percentage + "%"; font.pixelSize: Theme.scaled(38); font.weight: Font.Black; color: Colors.on_background }
                     Rectangle {
                         height: 22; width: pillText.implicitWidth + 30; radius: 11
-                        color: BatteryService.acOnline ? Theme.powerGreen : Theme.surface1
-                        Text { id: pillText; anchors.centerIn: parent; text: BatteryService.acOnline ? "PLUGGED" : "DISCHARGING"; color: BatteryService.acOnline ? Colors.background : Theme.text; font.weight: Font.Black; font.pixelSize: 9 }
+                        color: BatteryService.acOnline ? Theme.powerGreen : Colors.surface_variant
+                        Text { id: pillText; anchors.centerIn: parent; text: BatteryService.acOnline ? "PLUGGED" : "DISCHARGING"; color: BatteryService.acOnline ? Colors.background : Colors.on_background; font.weight: Font.Black; font.pixelSize: 9 }
                     }
                 }
-                Text { text: (root.isLimitActive ? "Conservative" : BatteryService.status).toUpperCase(); font.pixelSize: 10; font.weight: Font.Black; color: Theme.subtext1 }
+                Text { text: (root.isLimitActive ? "Conservative" : BatteryService.status).toUpperCase(); font.pixelSize: 10; font.weight: Font.Black; color: Colors.on_surface_variant }
                 
                 Rectangle {
                     Layout.fillWidth: true; Layout.topMargin: 10; height: 8; radius: 4; color: Qt.rgba(1,1,1,0.1)
                     Rectangle {
                         width: parent.width * (BatteryService.percentage / 100); height: parent.height; radius: 4
-                        color: BatteryService.acOnline ? Theme.powerGreen : (BatteryService.percentage <= 20 ? Theme.red : Theme.accentColor)
+                        color: BatteryService.acOnline ? Theme.powerGreen : (BatteryService.percentage <= 20 ? Colors.error : Theme.accentColor)
                         Behavior on width { NumberAnimation { duration: 1000; easing.type: Easing.OutCubic } }
                     }
                 }
@@ -88,8 +89,8 @@ ColumnLayout {
     // Info Grid
     RowLayout {
         Layout.fillWidth: true; spacing: 15
-        StatCard { label: "CYCLES"; value: BatteryService.cycleCount; icon: "󱂇"; accent: Theme.mauve }
-        StatCard { label: "REMAINING"; value: root.isLimitActive ? "N/A" : (BatteryService.timeRemaining || "..."); icon: "󰥔"; accent: Theme.blue }
+        StatCard { label: "CYCLES"; value: BatteryService.cycleCount; icon: "󱂇"; accent: Colors.primary }
+        StatCard { label: "REMAINING"; value: root.isLimitActive ? "N/A" : (BatteryService.timeRemaining || "..."); icon: "󰥔"; accent: Colors.primary }
     }
 
     component StatCard: Rectangle {
@@ -98,8 +99,8 @@ ColumnLayout {
         ColumnLayout {
             anchors.centerIn: parent; spacing: 5
             Text { text: icon; font.family: Theme.iconFont; font.pixelSize: 24; color: accent; Layout.alignment: Qt.AlignHCenter }
-            Text { text: value; color: Theme.text; font.weight: Font.Black; font.pixelSize: 14; Layout.alignment: Qt.AlignHCenter }
-            Text { text: label; color: Theme.subtext1; font.pixelSize: 8; font.weight: Font.Black; Layout.alignment: Qt.AlignHCenter }
+            Text { text: value; color: Colors.on_background; font.weight: Font.Black; font.pixelSize: 14; Layout.alignment: Qt.AlignHCenter }
+            Text { text: label; color: Colors.on_surface_variant; font.pixelSize: 8; font.weight: Font.Black; Layout.alignment: Qt.AlignHCenter }
         }
     }
 
@@ -107,9 +108,9 @@ ColumnLayout {
     Rectangle {
         Layout.fillWidth: true
         Layout.preferredHeight: Theme.scaled(64)
-        color: Theme.surface0
+        color: Colors.surface_variant
         radius: Theme.scaled(18)
-        border.color: Theme.surface1
+        border.color: Colors.surface_variant
 
         RowLayout {
             anchors.fill: parent
@@ -118,13 +119,13 @@ ColumnLayout {
             StatItem {
                 label: "VOLTAGE"
                 value: root.displayVoltage.toFixed(1) + "V"
-                valueColor: Theme.text
+                valueColor: Colors.on_background
             }
             Divider {}
             StatItem {
                 label: "WATTAGE"
                 value: root.displayWatts.toFixed(1) + "W"
-                valueColor: Theme.text
+                valueColor: Colors.on_background
             }
             Divider {}
             StatItem {
@@ -136,7 +137,7 @@ ColumnLayout {
             StatItem {
                 label: "TEMP"
                 value: (BatteryService.temp > 0 ? BatteryService.temp.toFixed(1) : "35.0") + "°C"
-                valueColor: BatteryService.temp > 45 ? Theme.powerRed : Theme.text
+                valueColor: BatteryService.temp > 45 ? Theme.powerRed : Colors.on_background
             }
         }
     }
@@ -158,7 +159,7 @@ ColumnLayout {
         Text {
             Layout.fillWidth: true
             text: label
-            color: Theme.subtext1
+            color: Colors.on_surface_variant
             font.pixelSize: Theme.scaled(8)
             font.weight: Font.Black
             font.letterSpacing: 1

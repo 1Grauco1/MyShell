@@ -1,3 +1,4 @@
+pragma ComponentBehavior: Bound
 import ".."
 import "../.."
 import "../../services"
@@ -22,9 +23,6 @@ Item {
     readonly property int batPercent: Math.max(0, Math.min(100, BatteryService.percentage))
     readonly property string batState: BatteryService.status
     readonly property bool acOnline: BatteryService.acOnline
-    readonly property color batFillCol: batPercent <= 15 ? "#ef4444" : Qt.rgba(1, 1, 1, 0.22)
-    readonly property color batBorderCol: batPercent <= 15 ? "#ef4444" : "#ffffff"
-
     height: Theme.pillHeight
     implicitHeight: Theme.pillHeight
     Layout.preferredHeight: Theme.pillHeight

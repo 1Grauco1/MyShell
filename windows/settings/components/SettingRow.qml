@@ -1,3 +1,4 @@
+pragma ComponentBehavior: Bound
 import QtQuick
 import QtQuick.Layouts
 import "../../../" as Shell
@@ -18,7 +19,7 @@ Rectangle {
         
         Text {
             text: label
-            color: Shell.Theme.text
+            color: Shell.Colors.on_background
             font.pixelSize: Shell.Theme.scaled(15)
             font.weight: Font.Medium
             Layout.fillWidth: true
@@ -38,6 +39,6 @@ Rectangle {
         width: parent.width - Shell.Theme.scaled(32)
         anchors.horizontalCenter: parent.horizontalCenter
         height: Shell.Theme.scaled(1)
-        color: Shell.Theme.surface1
+        color: Shell.Colors.surface_variant
     }
 }

@@ -1,3 +1,4 @@
+pragma ComponentBehavior: Bound
 pragma Singleton
 import QtQuick
 import Quickshell
@@ -32,7 +33,9 @@ QtObject {
     
     // ===== Glassmorphism & Effects =====
     readonly property real menuOpacity: AppearanceSettings.menuOpacity
+    readonly property real settingsOpacity: AppearanceSettings.settingsOpacity
     readonly property color glassBackground: Qt.alpha(Colors.background, menuOpacity)
+    readonly property color settingsBackground: Qt.alpha(Colors.background, settingsOpacity)
     readonly property color glassBorder: Qt.rgba(1, 1, 1, 0.15)
     readonly property color tooltipBackground: Qt.alpha(Colors.background, 0.95)
     readonly property real glassBlur: AppearanceSettings.glassBlur
@@ -58,21 +61,7 @@ QtObject {
     readonly property color surfaceContainerHighest: Colors.surface_container_highest
 
 
-    // ===== Colors (Static palette from Colors.qml) =====
-    readonly property color base: Colors.background
-    readonly property color mantle: Colors.surface
-    readonly property color surface0: Colors.surface_variant
-    readonly property color surface1: Colors.surface_variant
-    readonly property color surface2: Colors.outline
-    readonly property color subtext0: Colors.on_surface_variant
-    readonly property color subtext1: Colors.on_surface_variant
-    readonly property color text: Colors.on_background
-    readonly property color lavender: Colors.secondary
-    readonly property color blue: Colors.primary
-    readonly property color green: Colors.tertiary
-    readonly property color yellow: Colors.secondary_container
-    readonly property color red: Colors.error
-    readonly property color mauve: Colors.primary
+    // ===== Colors =====
     readonly property color accentColor: Colors.primary
     readonly property color accentGlow: {
         try {
@@ -125,16 +114,10 @@ QtObject {
     readonly property color menuInactiveTab: "transparent"
     
     // ===== Widget Specific Colors =====
-    readonly property color cpuColor: Colors.error
-    readonly property color memColor: Colors.primary
-    readonly property color tempColor: Colors.tertiary
     readonly property color bluetoothColor: Colors.primary
-    readonly property color volumeColor: Colors.primary
     readonly property color powerRed: Colors.error
     readonly property color powerYellow: Colors.secondary_container
     readonly property color powerGreen: Colors.tertiary
-    readonly property color mediaPeach: Colors.secondary
-    readonly property color mediaGray: Colors.outline
 
     // ===== Active States =====
     readonly property color activePillColor: Colors.surface_variant
@@ -142,29 +125,7 @@ QtObject {
     readonly property color activeTextColor: Colors.on_surface
     readonly property color inactiveTextColor: Colors.outline
 
-    // ===== Battery thresholds =====
-    readonly property int high: BatterySettings.high
-    readonly property int midHigh: BatterySettings.midHigh
-    readonly property int mid: BatterySettings.mid
-    readonly property int low: BatterySettings.low
-    readonly property int critical: BatterySettings.critical
-
-    // ===== Battery colors =====
-    readonly property color chargingColor: Colors.tertiary
-    readonly property color conserveColor: Colors.tertiary
-    readonly property color highColor: Colors.tertiary
-    readonly property color midColor: Colors.secondary_container
-    readonly property color lowColor: Colors.secondary
-    readonly property color criticalColor: Colors.error
-
     // ===== Icons (Nerd Font) =====
-    readonly property string chargingIcon: "󰂄"
-    readonly property string pluggedIcon: ""
-    readonly property string iconHigh: "󰁹"
-    readonly property string iconMidHigh: "󰂀"
-    readonly property string iconMid: "󰁿"
-    readonly property string iconLow: "󰁾"
-    readonly property string iconCritical: "󰁼"
     readonly property string volMute: "󰝟"
     readonly property string volLow: "󰕿"
     readonly property string volMid: "󰖀"
@@ -173,49 +134,24 @@ QtObject {
     readonly property string netUpIcon: ""
     readonly property string netDownIcon: ""
 
-    function batteryLevel(percent) {
-        if (percent <= critical) return "critical";
-        if (percent <= low) return "low";
-        if (percent <= mid) return "mid";
-        if (percent <= midHigh) return "midHigh";
-        return "high";
-    }
 
-    function batteryIcon(percent, charging) {
-        if (percent === undefined) return iconHigh;
-        if (charging) return chargingIcon;
-        if (percent <= critical) return iconCritical;
-        if (percent <= low) return iconLow;
-        if (percent <= mid) return iconMid;
-        if (percent <= midHigh) return iconMidHigh;
-        return iconHigh;
-    }
-
-    function batteryColorFor(percent, charging) {
-        if (percent === undefined) return highColor;
-        if (charging) return chargingColor;
-        if (percent <= critical) return criticalColor;
-        if (percent <= low) return lowColor;
-        if (percent <= mid) return midColor;
-        return highColor;
-    }
-
-    // Shared by the bar battery pill and quick-settings cluster (keeps both in sync)
+    // Shared by the bar battery pill and quick-settings cluster (keeps both in sync).
+    // Bands follow the user-configured thresholds from Settings -> Battery.
     function batteryStatusIcon(percent, state, ac) {
         const isLimitActive = (state === "not charging" || state === "full" || state === "idle") && ac;
         if (isLimitActive) return "";
         if (state === "charging") return "󰂄";
-        if (percent >= 90) return "󰁹";
-        if (percent >= 75) return "󰂁";
-        if (percent >= 60) return "󰁿";
-        if (percent >= 40) return "󰁽";
-        if (percent >= 20) return "󰁻";
+        if (percent > BatterySettings.high) return "󰁹";
+        if (percent > BatterySettings.midHigh) return "󰂁";
+        if (percent > BatterySettings.mid) return "󰁿";
+        if (percent > BatterySettings.low) return "󰁽";
+        if (percent > BatterySettings.critical) return "󰁻";
         return "󰂎";
     }
 
     function batteryStatusColor(percent, state, ac) {
         if (state === "charging") return powerGreen;
-        if (percent <= 15) return red;
+        if (percent <= BatterySettings.critical) return Colors.error;
         return fontColor;
     }
 

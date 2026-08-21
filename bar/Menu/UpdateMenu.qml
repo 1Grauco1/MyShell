@@ -1,3 +1,4 @@
+pragma ComponentBehavior: Bound
 import "../.."
 import QtQuick
 import QtQuick.Layouts
@@ -84,7 +85,7 @@ PopupWindow {
                 Item { Layout.fillWidth: true }
                 Text {
                     text: (g_antData.updates + shellData.updates) + " total"
-                    color: Theme.subtext1
+                    color: Colors.on_surface_variant
                     font.pixelSize: Theme.scaled(12)
                 }
             }
@@ -108,7 +109,7 @@ PopupWindow {
                 Text {
                     id: logText
                     text: "Ready to update..."
-                    color: Theme.text
+                    color: Colors.on_background
                     font.family: "monospace"
                     font.pixelSize: Theme.scaled(11)
                     wrapMode: Text.WordWrap
@@ -127,21 +128,21 @@ PopupWindow {
                     text: "Update All"
                     icon: "󰚰"
                     Layout.columnSpan: 2
-                    btnColor: Theme.blue
+                    btnColor: Colors.primary
                     onClicked: root.runUpdate("--quickshell --configs --new-pkgs --skip-xdg")
                 }
 
                 ActionButton {
                     text: "G_ant"
                     icon: "󱂵"
-                    btnColor: Theme.surface1
+                    btnColor: Colors.surface_variant
                     onClicked: root.runUpdate("--configs --skip-xdg")
                 }
 
                 ActionButton {
                     text: "Shell"
                     icon: "󰓞"
-                    btnColor: Theme.surface1
+                    btnColor: Colors.surface_variant
                     onClicked: root.runUpdate("--quickshell")
                 }
 
@@ -149,7 +150,7 @@ PopupWindow {
                     text: "Packages"
                     icon: "󰏖"
                     Layout.columnSpan: 2
-                    btnColor: Theme.surface1
+                    btnColor: Colors.surface_variant
                     onClicked: root.runUpdate("--new-pkgs")
                 }
             }
@@ -194,14 +195,14 @@ PopupWindow {
             }
             Text {
                 text: title
-                color: Theme.text
+                color: Colors.on_background
                 font.weight: Font.Medium
                 font.pixelSize: Theme.scaled(13)
             }
             Item { Layout.fillWidth: true }
             Text {
                 text: (repoData.updates || 0) + " updates"
-                color: (repoData.updates || 0) > 0 ? Theme.accentColor : Theme.subtext1
+                color: (repoData.updates || 0) > 0 ? Theme.accentColor : Colors.on_surface_variant
                 font.pixelSize: Theme.scaled(11)
             }
         }
@@ -210,7 +211,7 @@ PopupWindow {
     component ActionButton: Rectangle {
         property string text
         property string icon
-        property color btnColor: Theme.surface1
+        property color btnColor: Colors.surface_variant
         signal clicked()
 
         Layout.fillWidth: true
@@ -227,11 +228,11 @@ PopupWindow {
                 text: icon
                 font.family: Theme.iconFont
                 font.pixelSize: Theme.scaled(14)
-                color: Theme.text
+                color: Colors.on_background
             }
             Text {
                 text: parent.parent.text
-                color: Theme.text
+                color: Colors.on_background
                 font.pixelSize: Theme.scaled(12)
                 font.weight: Font.Medium
             }

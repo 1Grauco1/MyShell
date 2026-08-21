@@ -1,3 +1,4 @@
+pragma ComponentBehavior: Bound
 import ".."
 import QtQuick
 import QtQuick.Layouts
@@ -53,7 +54,7 @@ RowLayout {
                 text: ProductivityService.isBeeping ? "󰂚" : ""
                 font.family: Theme.iconFont
                 font.pixelSize: Theme.scaled(13)
-                color: (ProductivityService.running || ProductivityService.isBeeping) ? Colors.on_primary : Theme.text
+                color: (ProductivityService.running || ProductivityService.isBeeping) ? Colors.on_primary : Colors.on_background
                 Layout.alignment: Qt.AlignVCenter
             }
 
@@ -67,7 +68,7 @@ RowLayout {
                 }
                 font.weight: Font.Black
                 font.pixelSize: Theme.scaled(11)
-                color: (ProductivityService.running || ProductivityService.isBeeping) ? Colors.on_primary : Theme.text
+                color: (ProductivityService.running || ProductivityService.isBeeping) ? Colors.on_primary : Colors.on_background
                 Layout.alignment: Qt.AlignVCenter
             }
         }
@@ -213,7 +214,7 @@ RowLayout {
                     font.family: Theme.iconFont
                     font.pixelSize: Theme.scaled(13)
                     text: root.clockShowDate ? "󰃶" : "󰥔"
-                    color: Theme.subtext0
+                    color: Colors.on_surface_variant
                     Layout.alignment: Qt.AlignVCenter
                 }
 
@@ -279,7 +280,7 @@ RowLayout {
                         text: "󰀻"
                         font.family: Theme.iconFont
                         font.pixelSize: Theme.scaled(13)
-                        color: DynamicIslandService.activeMode === "launcher" ? Colors.on_primary : Theme.text
+                        color: DynamicIslandService.activeMode === "launcher" ? Colors.on_primary : Colors.on_background
                     }
 
                     MouseArea {
@@ -306,7 +307,7 @@ RowLayout {
                         text: "󰅍"
                         font.family: Theme.iconFont
                         font.pixelSize: Theme.scaled(13)
-                        color: DynamicIslandService.activeMode === "clipboard" ? Colors.on_primary : Theme.text
+                        color: DynamicIslandService.activeMode === "clipboard" ? Colors.on_primary : Colors.on_background
                     }
 
                     MouseArea {
@@ -333,7 +334,7 @@ RowLayout {
                         text: "󰞅"
                         font.family: Theme.iconFont
                         font.pixelSize: Theme.scaled(13)
-                        color: DynamicIslandService.activeMode === "emoji" ? Colors.on_primary : Theme.text
+                        color: DynamicIslandService.activeMode === "emoji" ? Colors.on_primary : Colors.on_background
                     }
 
                     MouseArea {
@@ -367,7 +368,7 @@ RowLayout {
                     anchors.fill: parent
                     verticalAlignment: TextInput.AlignVCenter
                     font.pixelSize: Theme.fontSize
-                    color: Theme.text
+                    color: Colors.on_background
                     selectByMouse: true
                     text: DynamicIslandService.query
                     focus: DynamicIslandService.active
@@ -477,7 +478,7 @@ RowLayout {
                             if (DynamicIslandService.activeMode === "emoji") return "Search emojis...";
                             return "Search...";
                         }
-                        color: Theme.subtext0
+                        color: Colors.on_surface_variant
                         font.pixelSize: Theme.fontSize
                         visible: searchInput.text.length === 0
                         anchors.verticalCenter: parent.verticalCenter
@@ -490,7 +491,7 @@ RowLayout {
                 text: "󰅖"
                 font.family: Theme.iconFont
                 font.pixelSize: Theme.scaled(13)
-                color: closeMouse.containsMouse ? Theme.powerRed : Theme.subtext0
+                color: closeMouse.containsMouse ? Theme.powerRed : Colors.on_surface_variant
                 Layout.alignment: Qt.AlignVCenter
 
                 MouseArea {

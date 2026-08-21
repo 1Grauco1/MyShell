@@ -1,3 +1,4 @@
+pragma ComponentBehavior: Bound
 import QtQuick
 import QtQuick.Controls
 import "../../../" as Shell
@@ -17,11 +18,11 @@ Row {
         width: Shell.Theme.scaled(32)
         height: Shell.Theme.scaled(32)
         radius: Shell.Theme.scaled(8)
-        color: Shell.Theme.surface1
+        color: Shell.Colors.surface_variant
         Text {
             anchors.centerIn: parent
             text: "-"
-            color: Shell.Theme.text
+            color: Shell.Colors.on_background
         }
         MouseArea {
             anchors.fill: parent
@@ -38,11 +39,11 @@ Row {
         width: Shell.Theme.scaled(50)
         height: Shell.Theme.scaled(32)
         radius: Shell.Theme.scaled(8)
-        color: Shell.Theme.surface1
+        color: Shell.Colors.surface_variant
         Text {
             anchors.centerIn: parent
             text: control.value.toString()
-            color: Shell.Theme.text
+            color: Shell.Colors.on_background
         }
     }
 
@@ -50,11 +51,11 @@ Row {
         width: Shell.Theme.scaled(32)
         height: Shell.Theme.scaled(32)
         radius: Shell.Theme.scaled(8)
-        color: Shell.Theme.surface1
+        color: Shell.Colors.surface_variant
         Text {
             anchors.centerIn: parent
             text: "+"
-            color: Shell.Theme.text
+            color: Shell.Colors.on_background
         }
         MouseArea {
             anchors.fill: parent
