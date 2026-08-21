@@ -1,3 +1,4 @@
+pragma ComponentBehavior: Bound
 import QtQuick
 import QtQuick.Layouts
 import "../.."
@@ -60,7 +61,7 @@ Item {
             Text {
                 Layout.fillWidth: true
                 text: picker.langName(picker.selectedCode)
-                color: Theme.text
+                color: Colors.on_background
                 font.pixelSize: Theme.scaled(11)
                 font.weight: Font.Bold
                 elide: Text.ElideRight
@@ -70,7 +71,7 @@ Item {
                 text: picker.dropdownOpen ? "󰅀" : "󰅂"
                 font.family: Theme.iconFont
                 font.pixelSize: Theme.scaled(12)
-                color: Theme.subtext0
+                color: Colors.on_surface_variant
             }
         }
 
@@ -104,6 +105,8 @@ Item {
             spacing: Theme.scaled(2)
             model: picker.filtered()
             delegate: Rectangle {
+                required property var modelData
+
                 width: list.width
                 height: Theme.scaled(30)
                 radius: Theme.bubbleRadiusSmall
@@ -124,7 +127,7 @@ Item {
                     Text {
                         Layout.fillWidth: true
                         text: modelData.name
-                        color: modelData.code === picker.selectedCode ? Theme.accentColor : Theme.text
+                        color: modelData.code === picker.selectedCode ? Theme.accentColor : Colors.on_background
                         font.pixelSize: Theme.scaled(10)
                         font.weight: modelData.code === picker.selectedCode ? Font.Bold : Font.Normal
                         elide: Text.ElideRight

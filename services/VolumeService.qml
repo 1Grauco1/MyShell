@@ -1,3 +1,4 @@
+pragma ComponentBehavior: Bound
 // services/VolumeService.qml
 import QtQuick
 import Quickshell

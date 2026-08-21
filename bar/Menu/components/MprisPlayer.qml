@@ -1,3 +1,4 @@
+pragma ComponentBehavior: Bound
 import QtQuick
 import QtQuick.Controls 2.15
 import QtQuick.Layouts
@@ -10,7 +11,7 @@ Rectangle {
     id: mprisPlayer
     color: Theme.menuBackground
     radius: Theme.scaled(16)
-    border.color: Theme.surface1
+    border.color: Colors.surface_variant
     border.width: 1
     Layout.fillWidth: true
     implicitHeight: Theme.scaled(110)
@@ -38,7 +39,7 @@ Rectangle {
         Rectangle {
             width: Theme.isSmallScreen ? Theme.scaled(60) : Theme.scaled(80)
             height: width
-            radius: Theme.scaled(12); color: Theme.mantle; clip: true
+            radius: Theme.scaled(12); color: Colors.surface; clip: true
             Layout.alignment: Qt.AlignVCenter
             Image {
                 anchors.fill: parent
@@ -48,7 +49,7 @@ Rectangle {
                 Behavior on opacity { NumberAnimation { duration: 250 } }
             }
             Text { 
-                anchors.centerIn: parent; text: "󰎆"; color: Theme.surface1; font.pixelSize: Theme.isSmallScreen ? Theme.scaled(20) : Theme.scaled(28)
+                anchors.centerIn: parent; text: "󰎆"; color: Colors.surface_variant; font.pixelSize: Theme.isSmallScreen ? Theme.scaled(20) : Theme.scaled(28)
                 visible: !player || !player.trackArtUrl 
             }
         }
@@ -59,7 +60,7 @@ Rectangle {
             
             Label {
                 text: player ? MediaPlayerService.formatMediaTitle(String(player.trackTitle || "Media"), player.identity) : "Idle"
-                color: Theme.text; font.bold: true; font.pixelSize: Theme.scaled(13); elide: Text.ElideRight; Layout.fillWidth: true
+                color: Colors.on_background; font.bold: true; font.pixelSize: Theme.scaled(13); elide: Text.ElideRight; Layout.fillWidth: true
             }
 
             ColumnLayout {
@@ -73,21 +74,21 @@ Rectangle {
                     padding: 0; leftPadding: 0; rightPadding: 0; topPadding: 0; bottomPadding: 0
                     background: Rectangle {
                         x: posSlider.leftPadding + Theme.scaled(6); y: posSlider.topPadding + (posSlider.availableHeight - height) / 2
-                        height: Theme.scaled(4); width: posSlider.availableWidth - Theme.scaled(12); radius: Theme.scaled(2); color: Theme.surface1
-                        Rectangle { width: posSlider.visualPosition * parent.width; height: Theme.scaled(4); color: Theme.blue; radius: Theme.scaled(2) }
+                        height: Theme.scaled(4); width: posSlider.availableWidth - Theme.scaled(12); radius: Theme.scaled(2); color: Colors.surface_variant
+                        Rectangle { width: posSlider.visualPosition * parent.width; height: Theme.scaled(4); color: Colors.primary; radius: Theme.scaled(2) }
                     }
                     handle: Rectangle {
                         x: posSlider.leftPadding + posSlider.visualPosition * (posSlider.availableWidth - width)
                         y: posSlider.topPadding + (posSlider.availableHeight - height) / 2
-                        width: Theme.scaled(10); height: Theme.scaled(10); radius: Theme.scaled(5); color: Theme.lavender
+                        width: Theme.scaled(10); height: Theme.scaled(10); radius: Theme.scaled(5); color: Colors.secondary
                         visible: posSlider.hovered || posSlider.pressed
                     }
                 }
                 RowLayout {
                     Layout.fillWidth: true
-                    Label { text: mprisPlayer.formatTime(mprisPlayer.currentPos); color: Theme.subtext1; font.pixelSize: Theme.scaled(9) }
+                    Label { text: mprisPlayer.formatTime(mprisPlayer.currentPos); color: Colors.on_surface_variant; font.pixelSize: Theme.scaled(9) }
                     Item { Layout.fillWidth: true }
-                    Label { text: mprisPlayer.formatTime(player ? player.length : 0); color: Theme.subtext1; font.pixelSize: Theme.scaled(9) }
+                    Label { text: mprisPlayer.formatTime(player ? player.length : 0); color: Colors.on_surface_variant; font.pixelSize: Theme.scaled(9) }
                 }
             }
 
@@ -98,7 +99,7 @@ Rectangle {
                     Button { 
                         flat: true; implicitWidth: Theme.scaled(28); implicitHeight: Theme.scaled(28)
                         onClicked: { if(player) player.previous() }
-                        contentItem: Text { text: "󰒮"; color: Theme.text; font.pixelSize: Theme.scaled(14); horizontalAlignment: Text.AlignHCenter; verticalAlignment: Text.AlignVCenter } 
+                        contentItem: Text { text: "󰒮"; color: Colors.on_background; font.pixelSize: Theme.scaled(14); horizontalAlignment: Text.AlignHCenter; verticalAlignment: Text.AlignVCenter } 
                     }
                     Button { 
                         flat: true; implicitWidth: Theme.scaled(32); implicitHeight: Theme.scaled(32)
@@ -111,13 +112,13 @@ Rectangle {
                         }
                         contentItem: Text { 
                             text: mprisPlayer.isActuallyPlaying ? "󰏤" : "󰐊"
-                            color: Theme.blue; font.pixelSize: Theme.scaled(18); horizontalAlignment: Text.AlignHCenter; verticalAlignment: Text.AlignVCenter 
+                            color: Colors.primary; font.pixelSize: Theme.scaled(18); horizontalAlignment: Text.AlignHCenter; verticalAlignment: Text.AlignVCenter 
                         } 
                     }
                     Button { 
                         flat: true; implicitWidth: Theme.scaled(28); implicitHeight: Theme.scaled(28)
                         onClicked: { if(player) player.next() }
-                        contentItem: Text { text: "󰒭"; color: Theme.text; font.pixelSize: Theme.scaled(14); horizontalAlignment: Text.AlignHCenter; verticalAlignment: Text.AlignVCenter } 
+                        contentItem: Text { text: "󰒭"; color: Colors.on_background; font.pixelSize: Theme.scaled(14); horizontalAlignment: Text.AlignHCenter; verticalAlignment: Text.AlignVCenter } 
                     }
                 }
                 
@@ -128,13 +129,15 @@ Rectangle {
                     Repeater {
                         model: Mpris.players.values
                         delegate: MouseArea {
+                            required property var modelData
+
                             width: Theme.scaled(16); height: Theme.scaled(16)
                             cursorShape: Qt.PointingHandCursor
                             onClicked: MediaPlayerService.updateTrackedPlayer(modelData)
                             Text {
                                 anchors.centerIn: parent
                                 font.pixelSize: Theme.scaled(14)
-                                color: (mprisPlayer.player === modelData) ? Theme.mauve : (modelData.playbackState === MprisPlaybackState.Playing ? Theme.green : Theme.surface2)
+                                color: (mprisPlayer.player === modelData) ? Colors.primary : (modelData.playbackState === MprisPlaybackState.Playing ? Colors.tertiary : Colors.outline)
                                 text: {
                                     let id = modelData.identity.toLowerCase();
                                     if (id.includes("firefox")) return "󰈹";

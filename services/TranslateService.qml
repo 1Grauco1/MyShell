@@ -1,3 +1,4 @@
+pragma ComponentBehavior: Bound
 // services/TranslateService.qml
 import QtQuick
 import Quickshell

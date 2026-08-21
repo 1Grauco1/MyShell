@@ -1,3 +1,4 @@
+pragma ComponentBehavior: Bound
 import "../../.."
 import "../../../services"
 import QtQuick
@@ -28,7 +29,7 @@ ColumnLayout {
 
         Text {
             text: "POWER PROFILES"
-            color: Theme.mauve
+            color: Colors.primary
             font.pixelSize: Theme.scaled(10)
             font.weight: Font.Black
             font.letterSpacing: 2
@@ -66,13 +67,15 @@ ColumnLayout {
         Repeater {
             model: [
                 { id: "performance", icon: "󰀦", color: Theme.powerRed, label: "PERFORMANCE", desc: "Max Speed & Power" },
-                { id: "balanced",    icon: "󰏤", color: Theme.blue, label: "BALANCED", desc: "Optimal Performance" },
+                { id: "balanced",    icon: "󰏤", color: Colors.primary, label: "BALANCED", desc: "Optimal Performance" },
                 { id: "powersave",   icon: "󰍛", color: Theme.powerGreen, label: "POWER SAVER", desc: "Extended Battery Life" },
                 { id: "turbo",       icon: "󰞃", color: Theme.powerYellow, label: "TURBO", desc: "Peak Boost Mode" }
             ]
 
             delegate: Rectangle {
                 id: profileCard
+                required property var modelData
+
                 Layout.fillWidth: true
                 height: Theme.scaled(82)
                 color: PowerProfileService.currentProfile === modelData.id ? 
@@ -107,7 +110,7 @@ ColumnLayout {
                             text: modelData.icon
                             font.family: Theme.iconFont
                             font.pixelSize: Theme.scaled(20)
-                            color: PowerProfileService.currentProfile === modelData.id ? Theme.base : modelData.color
+                            color: PowerProfileService.currentProfile === modelData.id ? Colors.background : modelData.color
                         }
                     }
 
@@ -121,7 +124,7 @@ ColumnLayout {
                                 text: modelData.label
                                 font.pixelSize: Theme.scaled(11)
                                 font.weight: Font.Black
-                                color: Theme.text
+                                color: Colors.on_background
                             }
 
                             Rectangle {
@@ -134,7 +137,7 @@ ColumnLayout {
                         Text {
                             text: modelData.desc
                             font.pixelSize: Theme.scaled(9)
-                            color: Theme.subtext0
+                            color: Colors.on_surface_variant
                             elide: Text.ElideRight
                         }
                     }
@@ -163,7 +166,7 @@ ColumnLayout {
 
                 Text {
                     text: "LIVE SYSTEM"
-                    color: Theme.mauve
+                    color: Colors.primary
                     font.pixelSize: Theme.scaled(9)
                     font.weight: Font.Black
                     font.letterSpacing: 2
@@ -173,7 +176,7 @@ ColumnLayout {
 
                 Text {
                     text: ResourceService.cpuModel + " · " + ResourceService.freq
-                    color: Theme.subtext0
+                    color: Colors.on_surface_variant
                     font.pixelSize: Theme.scaled(8)
                     elide: Text.ElideRight
                     Layout.maximumWidth: Theme.scaled(200)
@@ -217,7 +220,7 @@ ColumnLayout {
 
                 Text {
                     text: "CORES"
-                    color: Theme.subtext0
+                    color: Colors.on_surface_variant
                     font.pixelSize: Theme.scaled(7)
                     font.weight: Font.Bold
                     font.letterSpacing: 1.5
@@ -227,6 +230,8 @@ ColumnLayout {
                 Repeater {
                     model: ResourceService.coreUsages
                     delegate: Rectangle {
+                        required property var modelData
+
                         Layout.fillWidth: true
                         Layout.preferredWidth: Theme.scaled(8)
                         Layout.minimumWidth: Theme.scaled(3)
@@ -240,7 +245,7 @@ ColumnLayout {
                             width: parent.width
                             height: Math.max(Theme.scaled(3), parent.height * (modelData / 100))
                             radius: Theme.scaled(3)
-                            color: modelData > 85 ? Theme.powerRed : (modelData > 50 ? Theme.powerYellow : Theme.mauve)
+                            color: modelData > 85 ? Theme.powerRed : (modelData > 50 ? Theme.powerYellow : Colors.primary)
                             Behavior on height { NumberAnimation { duration: 300; easing.type: Easing.OutCubic } }
                         }
                     }
@@ -271,7 +276,7 @@ ColumnLayout {
             Text { text: block.icon; font.family: Theme.iconFont; font.pixelSize: Theme.scaled(13); color: block.accent }
             Text {
                 text: block.label
-                color: Theme.subtext0
+                color: Colors.on_surface_variant
                 font.pixelSize: Theme.scaled(8)
                 font.weight: Font.Bold
                 font.letterSpacing: 1.5
@@ -279,7 +284,7 @@ ColumnLayout {
             }
             Text {
                 text: block.value + block.suffix
-                color: Theme.text
+                color: Colors.on_background
                 font.pixelSize: Theme.scaled(16)
                 font.weight: Font.Black
             }

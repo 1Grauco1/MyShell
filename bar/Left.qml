@@ -1,3 +1,4 @@
+pragma ComponentBehavior: Bound
 import "Left"
 import QtQuick
 import Quickshell

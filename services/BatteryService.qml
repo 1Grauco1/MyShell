@@ -1,3 +1,4 @@
+pragma ComponentBehavior: Bound
 // services/BatteryService.qml
 import QtQuick
 import Quickshell

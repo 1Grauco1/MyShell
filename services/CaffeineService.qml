@@ -1,3 +1,4 @@
+pragma ComponentBehavior: Bound
 // services/CaffeineService.qml
 import QtQuick
 import Quickshell

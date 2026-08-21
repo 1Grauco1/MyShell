@@ -1,3 +1,4 @@
+pragma ComponentBehavior: Bound
 // bar/Right/Resources.qml
 import ".."
 import "../.."

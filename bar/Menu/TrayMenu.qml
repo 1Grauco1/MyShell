@@ -1,3 +1,4 @@
+pragma ComponentBehavior: Bound
 import "../.."
 import QtQuick
 import QtQuick.Layouts
@@ -140,7 +141,7 @@ PopupWindow {
                             text: "Back"
                             font.pixelSize: Theme.scaled(11)
                             font.weight: Font.Bold
-                            color: Theme.text
+                            color: Colors.on_background
                         }
                     }
 
@@ -163,6 +164,8 @@ PopupWindow {
 
                         delegate: Rectangle {
                             id: itemRect
+                            required property var modelData
+
                             readonly property var entry: modelData
                             Layout.fillWidth: true
                             Layout.preferredHeight: entry.isSeparator ? Theme.scaled(11) : Theme.scaled(34)
@@ -212,7 +215,7 @@ PopupWindow {
                                 Text {
                                     text: String(entry.text || "").replace(/&/g, "")
                                     Layout.fillWidth: true
-                                    color: entry.enabled ? (itemMouse.containsMouse ? Theme.accentColor : Theme.text) : Theme.subtext0
+                                    color: entry.enabled ? (itemMouse.containsMouse ? Theme.accentColor : Colors.on_background) : Colors.on_surface_variant
                                     font.pixelSize: Theme.scaled(11)
                                     font.weight: itemMouse.containsMouse ? Font.Bold : Font.Normal
                                     elide: Text.ElideRight
@@ -223,7 +226,7 @@ PopupWindow {
                                     text: "󰅂"
                                     font.family: Theme.iconFont
                                     font.pixelSize: Theme.scaled(12)
-                                    color: Theme.subtext0
+                                    color: Colors.on_surface_variant
                                     visible: entry.hasChildren
                                     Layout.alignment: Qt.AlignVCenter
                                 }

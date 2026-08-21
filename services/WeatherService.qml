@@ -1,3 +1,4 @@
+pragma ComponentBehavior: Bound
 // services/WeatherService.qml
 import QtQuick
 import Quickshell

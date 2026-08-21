@@ -1,3 +1,4 @@
+pragma ComponentBehavior: Bound
 import QtQuick
 import QtQuick.Controls 2.15
 import QtQuick.Layouts
@@ -27,6 +28,8 @@ Flickable {
             Repeater {
                 model: NotificationService.notifications
                 delegate: NotificationItem {
+                    required property int index
+
                     notification: NotificationService.notifications.get(index)
                     Layout.fillWidth: true
                     enableAutoDismiss: false
@@ -46,12 +49,12 @@ Flickable {
             Text {
                 text: "󰂚"
                 font.pixelSize: Theme.scaled(80)
-                color: Theme.surface1
+                color: Colors.surface_variant
                 Layout.alignment: Qt.AlignCenter
             }
             Text {
                 text: "All caught up"
-                color: Theme.surface2
+                color: Colors.outline
                 font.pixelSize: Theme.scaled(13)
                 Layout.alignment: Qt.AlignCenter
             }

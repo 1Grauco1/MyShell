@@ -1,3 +1,4 @@
+pragma ComponentBehavior: Bound
 // bar/Right/Network.qml
 import ".."
 import "../.."

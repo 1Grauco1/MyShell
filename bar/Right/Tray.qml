@@ -1,3 +1,4 @@
+pragma ComponentBehavior: Bound
 // bar/Right/Tray.qml
 import "../.."
 import QtQuick
@@ -43,6 +44,8 @@ Rectangle {
             model: SystemTray.items
 
             delegate: TrayItem {
+                required property var modelData
+
                 item: modelData
                 menuRef: trayContainer.menuRef
             }

@@ -1,3 +1,4 @@
+pragma ComponentBehavior: Bound
 // bar/Bar.qml
 import ".."
 import "./Menu"

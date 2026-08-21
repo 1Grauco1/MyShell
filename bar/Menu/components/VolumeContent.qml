@@ -1,3 +1,4 @@
+pragma ComponentBehavior: Bound
 import "../.."
 import "../../../"
 import "../../../services"
@@ -31,7 +32,7 @@ ColumnLayout {
         ColumnLayout {
             spacing: Theme.scaled(2); Layout.fillWidth: true
             Text { text: "AUDIO CONTROL"; color: Theme.accentColor; font.pixelSize: Theme.scaled(14); font.letterSpacing: 2; font.weight: Font.Black }
-            Text { text: "OUTPUT & INPUT DEVICES"; color: Theme.subtext0; font.pixelSize: Theme.scaled(10); font.weight: Font.Bold; font.letterSpacing: 1 }
+            Text { text: "OUTPUT & INPUT DEVICES"; color: Colors.on_surface_variant; font.pixelSize: Theme.scaled(10); font.weight: Font.Bold; font.letterSpacing: 1 }
         }
     }
 
@@ -106,7 +107,7 @@ ColumnLayout {
                                     }
                                     return VolumeService.sinks.length > 0 ? VolumeService.sinks[0].name : "Select Output Device";
                                 }
-                                color: Theme.text
+                                color: Colors.on_background
                                 font.pixelSize: Theme.scaled(11)
                                 font.weight: Font.Bold
                                 elide: Text.ElideRight
@@ -116,7 +117,7 @@ ColumnLayout {
                                 text: outputCard.dropdownOpen ? "󰅀" : "󰅂"
                                 font.family: Theme.iconFont
                                 font.pixelSize: Theme.scaled(12)
-                                color: Theme.subtext0
+                                color: Colors.on_surface_variant
                             }
                         }
 
@@ -131,7 +132,7 @@ ColumnLayout {
                         width: Theme.scaled(38)
                         height: Theme.scaled(38)
                         radius: Theme.bubbleRadiusSmall
-                        color: VolumeService.muted ? Qt.rgba(Theme.red.r, Theme.red.g, Theme.red.b, 0.2) : Theme.surfaceContainerHigh
+                        color: VolumeService.muted ? Qt.rgba(Colors.error.r, Colors.error.g, Colors.error.b, 0.2) : Theme.surfaceContainerHigh
                         border.color: VolumeService.muted ? Theme.powerRed : Theme.glassBorder
 
                         Text {
@@ -139,7 +140,7 @@ ColumnLayout {
                             text: VolumeService.muted ? "󰝟" : "󰕾"
                             font.family: Theme.iconFont
                             font.pixelSize: Theme.scaled(16)
-                            color: VolumeService.muted ? Theme.powerRed : Theme.text
+                            color: VolumeService.muted ? Theme.powerRed : Colors.on_background
                         }
 
                         MouseArea {
@@ -159,6 +160,8 @@ ColumnLayout {
                     spacing: Theme.scaled(4)
 
                     delegate: Rectangle {
+                        required property var modelData
+
                         width: ListView.view.width
                         height: Theme.scaled(32)
                         radius: Theme.bubbleRadiusSmall
@@ -173,13 +176,13 @@ ColumnLayout {
                                 text: modelData.isDefault ? "󰄬" : "󰓃"
                                 font.family: Theme.iconFont
                                 font.pixelSize: Theme.scaled(12)
-                                color: modelData.isDefault ? Theme.powerGreen : Theme.subtext0
+                                color: modelData.isDefault ? Theme.powerGreen : Colors.on_surface_variant
                             }
 
                             Text {
                                 Layout.fillWidth: true
                                 text: modelData.name
-                                color: modelData.isDefault ? Theme.accentColor : Theme.text
+                                color: modelData.isDefault ? Theme.accentColor : Colors.on_background
                                 font.pixelSize: Theme.scaled(10)
                                 font.weight: modelData.isDefault ? Font.Bold : Font.Normal
                                 elide: Text.ElideRight
@@ -264,7 +267,7 @@ ColumnLayout {
                                     }
                                     return VolumeService.sources.length > 0 ? VolumeService.sources[0].name : "Select Input Device";
                                 }
-                                color: Theme.text
+                                color: Colors.on_background
                                 font.pixelSize: Theme.scaled(11)
                                 font.weight: Font.Bold
                                 elide: Text.ElideRight
@@ -274,7 +277,7 @@ ColumnLayout {
                                 text: inputCard.dropdownOpen ? "󰅀" : "󰅂"
                                 font.family: Theme.iconFont
                                 font.pixelSize: Theme.scaled(12)
-                                color: Theme.subtext0
+                                color: Colors.on_surface_variant
                             }
                         }
 
@@ -289,7 +292,7 @@ ColumnLayout {
                         width: Theme.scaled(38)
                         height: Theme.scaled(38)
                         radius: Theme.bubbleRadiusSmall
-                        color: VolumeService.micMuted ? Qt.rgba(Theme.red.r, Theme.red.g, Theme.red.b, 0.2) : Theme.surfaceContainerHigh
+                        color: VolumeService.micMuted ? Qt.rgba(Colors.error.r, Colors.error.g, Colors.error.b, 0.2) : Theme.surfaceContainerHigh
                         border.color: VolumeService.micMuted ? Theme.powerRed : Theme.glassBorder
 
                         Text {
@@ -297,7 +300,7 @@ ColumnLayout {
                             text: VolumeService.micMuted ? "󰍭" : "󰍬"
                             font.family: Theme.iconFont
                             font.pixelSize: Theme.scaled(16)
-                            color: VolumeService.micMuted ? Theme.powerRed : Theme.text
+                            color: VolumeService.micMuted ? Theme.powerRed : Colors.on_background
                         }
 
                         MouseArea {
@@ -317,6 +320,8 @@ ColumnLayout {
                     spacing: Theme.scaled(4)
 
                     delegate: Rectangle {
+                        required property var modelData
+
                         width: ListView.view.width
                         height: Theme.scaled(32)
                         radius: Theme.bubbleRadiusSmall
@@ -331,13 +336,13 @@ ColumnLayout {
                                 text: modelData.isDefault ? "󰄬" : "󰍬"
                                 font.family: Theme.iconFont
                                 font.pixelSize: Theme.scaled(12)
-                                color: modelData.isDefault ? Theme.powerGreen : Theme.subtext0
+                                color: modelData.isDefault ? Theme.powerGreen : Colors.on_surface_variant
                             }
 
                             Text {
                                 Layout.fillWidth: true
                                 text: modelData.name
-                                color: modelData.isDefault ? Theme.accentColor : Theme.text
+                                color: modelData.isDefault ? Theme.accentColor : Colors.on_background
                                 font.pixelSize: Theme.scaled(10)
                                 font.weight: modelData.isDefault ? Font.Bold : Font.Normal
                                 elide: Text.ElideRight

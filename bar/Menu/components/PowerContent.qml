@@ -1,3 +1,4 @@
+pragma ComponentBehavior: Bound
 import QtQuick
 import QtQuick.Layouts
 import QtQuick.Controls
@@ -59,7 +60,7 @@ ColumnLayout {
 
         Text {
             text: "SYSTEM SESSION"
-            color: Theme.blue
+            color: Colors.primary
             font.pixelSize: 10
             font.weight: Font.Black
             font.letterSpacing: 2
@@ -75,16 +76,19 @@ ColumnLayout {
             Repeater {
                 id: powerButtons
                 model: [
-                    { icon: "󰌾", label: "LOCK",     cmd: "hyprlock --immediate-render --no-fade-in", color: Theme.lavender },
-                    { icon: "󰒲", label: "BIOS",     cmd: "systemctl reboot --firmware-setup", color: Theme.mauve },
+                    { icon: "󰌾", label: "LOCK",     cmd: "hyprlock --immediate-render --no-fade-in", color: Colors.secondary },
+                    { icon: "󰒲", label: "BIOS",     cmd: "systemctl reboot --firmware-setup", color: Colors.primary },
                     { icon: "󰗼", label: "LOGOUT",   cmd: "hyprctl dispatch exit", color: Theme.powerGreen },
-                    { icon: "󰤄", label: "SUSPEND",  cmd: "systemctl suspend", color: Theme.lavender },
-                    { icon: "󰑐", label: "REBOOT",   cmd: "reboot", color: Theme.blue },
+                    { icon: "󰤄", label: "SUSPEND",  cmd: "systemctl suspend", color: Colors.secondary },
+                    { icon: "󰑐", label: "REBOOT",   cmd: "reboot", color: Colors.primary },
                     { icon: "󰐥", label: "SHUTDOWN", cmd: "shutdown now", color: Theme.powerRed }
                 ]
 
                 delegate: Rectangle {
                     id: powerBtn
+                    required property int index
+                    required property var modelData
+
                     Layout.fillWidth: true
                     height: Theme.scaled(100)
                     anchors.margins: 2 
@@ -114,7 +118,7 @@ ColumnLayout {
                             width: 44; height: 44; radius: 12; color: Qt.rgba(modelData.color.r, modelData.color.g, modelData.color.b, 0.1)
                             Text { anchors.centerIn: parent; text: modelData.icon; font.family: Theme.iconFont; font.pixelSize: 22; color: modelData.color }
                         }
-                        Text { text: modelData.label; font.pixelSize: 11; font.weight: Font.Black; color: Theme.text; opacity: 0.8 }
+                        Text { text: modelData.label; font.pixelSize: 11; font.weight: Font.Black; color: Colors.on_background; opacity: 0.8 }
                     }
                 }
             }

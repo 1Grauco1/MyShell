@@ -1,3 +1,4 @@
+pragma ComponentBehavior: Bound
 import QtQuick
 import QtQuick.Layouts
 import QtQuick.Controls
@@ -75,7 +76,7 @@ Item {
 
                     Text {
                         text: root.isAirplane ? "AIRPLANE MODE ACTIVE" : (wifiSvc.networks.length + " NETWORKS IN RANGE")
-                        color: Theme.subtext0
+                        color: Colors.on_surface_variant
                         font.pixelSize: Theme.scaled(10)
                         font.weight: Font.Bold
                         font.letterSpacing: 1
@@ -106,7 +107,7 @@ Item {
 
                         Text {
                             text: wifiSvc.isTesting ? "TESTING" : (wifiSvc.currentSpeed === "0.0 Mbps" ? "SPEED" : wifiSvc.currentSpeed)
-                            color: Theme.text
+                            color: Colors.on_background
                             font.pixelSize: Theme.scaled(10)
                             font.weight: Font.Black
                         }
@@ -161,7 +162,7 @@ Item {
                     width: Theme.scaled(42)
                     height: Theme.scaled(42)
                     radius: Theme.bubbleRadiusPill
-                    color: root.isAirplane ? Qt.rgba(Theme.red.r, Theme.red.g, Theme.red.b, 0.25) : (airplaneMouse.containsMouse ? Theme.surfaceContainerHigh : Theme.surfaceContainerLow)
+                    color: root.isAirplane ? Qt.rgba(Colors.error.r, Colors.error.g, Colors.error.b, 0.25) : (airplaneMouse.containsMouse ? Theme.surfaceContainerHigh : Theme.surfaceContainerLow)
                     border.color: root.isAirplane ? Theme.powerRed : Theme.glassBorder
                     clip: true
 
@@ -172,7 +173,7 @@ Item {
                         text: "󰀞"
                         font.family: Theme.iconFont
                         font.pixelSize: Theme.scaled(20)
-                        color: root.isAirplane ? Theme.powerRed : Theme.text
+                        color: root.isAirplane ? Theme.powerRed : Colors.on_background
                     }
 
                     MouseArea {
@@ -203,7 +204,7 @@ Item {
                         width: Theme.scaled(38)
                         height: Theme.scaled(38)
                         radius: Theme.bubbleRadiusSmall
-                        color: Qt.rgba(Theme.green.r, Theme.green.g, Theme.green.b, 0.2)
+                        color: Qt.rgba(Colors.tertiary.r, Colors.tertiary.g, Colors.tertiary.b, 0.2)
 
                         Text {
                             anchors.centerIn: parent
@@ -220,7 +221,7 @@ Item {
 
                         Text {
                             text: wifiSvc.currentSsid
-                            color: Theme.text
+                            color: Colors.on_background
                             font.weight: Font.Bold
                             font.pixelSize: Theme.scaled(14)
                             elide: Text.ElideRight
@@ -228,7 +229,7 @@ Item {
 
                         Text {
                             text: wifiSvc.ipv4Address ? ("IP: " + wifiSvc.ipv4Address) : "Connected"
-                            color: Theme.subtext0
+                            color: Colors.on_surface_variant
                             font.pixelSize: Theme.scaled(10)
                             font.weight: Font.Bold
                         }
@@ -238,8 +239,8 @@ Item {
                         width: Theme.scaled(85)
                         height: Theme.scaled(34)
                         radius: Theme.bubbleRadiusSmall
-                        color: Qt.rgba(Theme.red.r, Theme.red.g, Theme.red.b, 0.15)
-                        border.color: Theme.red
+                        color: Qt.rgba(Colors.error.r, Colors.error.g, Colors.error.b, 0.15)
+                        border.color: Colors.error
                         border.width: 1
 
                         Text {
@@ -271,6 +272,8 @@ Item {
 
             delegate: FocusScope {
                 id: delegateRoot
+                required property var modelData
+
                 width: list.width
 
                 property bool isKnown: !!(modelData && modelData.isKnown)
@@ -322,7 +325,7 @@ Item {
                                     text: isConnected ? "󰤨" : (modelData.signal >= 4 ? "󰤨" : (modelData.signal >= 3 ? "󰤥" : (modelData.signal >= 2 ? "󰤢" : (modelData.signal >= 1 ? "󰤟" : "󰤯"))))
                                     font.family: Theme.iconFont
                                     font.pixelSize: Theme.scaled(18)
-                                    color: isConnected ? Theme.powerGreen : Theme.text
+                                    color: isConnected ? Theme.powerGreen : Colors.on_background
                                 }
                             }
 
@@ -332,7 +335,7 @@ Item {
 
                                 Text {
                                     text: modelData.ssid
-                                    color: Theme.text
+                                    color: Colors.on_background
                                     font.weight: Font.Bold
                                     font.pixelSize: Theme.scaled(13)
                                     elide: Text.ElideRight
@@ -340,7 +343,7 @@ Item {
 
                                 Text {
                                     text: isConnected ? "ACTIVE" : (isKnown ? "SAVED" : ("SIGNAL " + modelData.signalPct + "%"))
-                                    color: isConnected ? Theme.powerGreen : Theme.subtext0
+                                    color: isConnected ? Theme.powerGreen : Colors.on_surface_variant
                                     font.pixelSize: Theme.scaled(9)
                                     font.weight: Font.Black
                                 }
@@ -354,8 +357,8 @@ Item {
                                     width: Theme.scaled(34)
                                     height: Theme.scaled(34)
                                     radius: Theme.bubbleRadiusSmall
-                                    color: Qt.rgba(Theme.red.r, Theme.red.g, Theme.red.b, 0.15)
-                                    border.color: Qt.rgba(Theme.red.r, Theme.red.g, Theme.red.b, 0.4)
+                                    color: Qt.rgba(Colors.error.r, Colors.error.g, Colors.error.b, 0.15)
+                                    border.color: Qt.rgba(Colors.error.r, Colors.error.g, Colors.error.b, 0.4)
                                     border.width: 1
 
                                     Text {
@@ -405,7 +408,7 @@ Item {
                                         text: "󰅂"
                                         font.family: Theme.iconFont
                                         font.pixelSize: Theme.scaled(14)
-                                        color: Theme.text
+                                        color: Colors.on_background
                                     }
 
                                     MouseArea {
@@ -445,13 +448,13 @@ Item {
                                         anchors.fill: parent
                                         anchors.margins: Theme.scaled(8)
                                         echoMode: showPassText.checked ? TextInput.Normal : TextInput.Password
-                                        color: Theme.text
+                                        color: Colors.on_background
                                         font.pixelSize: Theme.scaled(12)
                                         verticalAlignment: TextInput.AlignVCenter
 
                                         Text {
                                             text: "Enter WiFi Password..."
-                                            color: Theme.subtext0
+                                            color: Colors.on_surface_variant
                                             visible: !passInput.text
                                             font.pixelSize: Theme.scaled(11)
                                             anchors.verticalCenter: parent.verticalCenter
@@ -480,7 +483,7 @@ Item {
                                         text: showPassText.checked ? "󰈈" : "󰈉"
                                         font.family: Theme.iconFont
                                         font.pixelSize: Theme.scaled(16)
-                                        color: Theme.text
+                                        color: Colors.on_background
                                     }
 
                                     MouseArea {

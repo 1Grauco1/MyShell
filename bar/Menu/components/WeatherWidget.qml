@@ -1,3 +1,4 @@
+pragma ComponentBehavior: Bound
 import QtQuick
 import QtQuick.Layouts
 import Quickshell
@@ -10,7 +11,7 @@ Rectangle {
     implicitWidth: Theme.scaled(320)
     color: Theme.menuBackground
     radius: Theme.scaled(16)
-    border.color: Theme.surface1
+    border.color: Colors.surface_variant
     border.width: 1
 
     readonly property var weatherData: WeatherService.weatherData
@@ -28,9 +29,9 @@ Rectangle {
         // Header - Always at the top
         RowLayout {
             Layout.fillWidth: true
-            Text { text: "Weather"; color: Theme.blue; font.weight: Font.Black; font.pixelSize: Theme.scaled(14); font.letterSpacing: 1 }
+            Text { text: "Weather"; color: Colors.primary; font.weight: Font.Black; font.pixelSize: Theme.scaled(14); font.letterSpacing: 1 }
             Item { Layout.fillWidth: true }
-            Text { text: (root.weatherData?.nearest_area?.[0]?.areaName?.[0]?.value || WeatherService.areaName); color: Theme.surface2; font.pixelSize: Theme.scaled(11) }
+            Text { text: (root.weatherData?.nearest_area?.[0]?.areaName?.[0]?.value || WeatherService.areaName); color: Colors.outline; font.pixelSize: Theme.scaled(11) }
         }
 
         // Main Content Row - Forced vertical centering
@@ -54,12 +55,12 @@ Rectangle {
                 }
                 Text {
                     text: (root.weatherData?.current_condition?.[0]?.temp_C || WeatherService.tempC) + "°C"
-                    color: Theme.text; font.pixelSize: Theme.scaled(32); font.bold: true
+                    color: Colors.on_background; font.pixelSize: Theme.scaled(32); font.bold: true
                     Layout.alignment: Qt.AlignHCenter
                 }
                 Text {
                     text: root.weatherData?.current_condition?.[0]?.weatherDesc?.[0]?.value || WeatherService.weatherDesc
-                    color: Theme.subtext0; font.pixelSize: Theme.scaled(12)
+                    color: Colors.on_surface_variant; font.pixelSize: Theme.scaled(12)
                     Layout.fillWidth: true
                     horizontalAlignment: Text.AlignHCenter
                     wrapMode: Text.WordWrap
@@ -73,7 +74,7 @@ Rectangle {
                 width: 1
                 Layout.fillHeight: true
                 Layout.maximumHeight: Theme.scaled(120)
-                color: Theme.surface1
+                color: Colors.surface_variant
                 Layout.alignment: Qt.AlignVCenter
             }
 
@@ -86,10 +87,12 @@ Rectangle {
                 Repeater {
                     model: (root.weatherData?.weather || []).slice(1, 4)
                     delegate: RowLayout {
+                        required property var modelData
+
                         spacing: Theme.scaled(12)
-                        Text { text: Qt.formatDate(new Date(modelData.date), "ddd"); color: Theme.surface2; font.pixelSize: Theme.scaled(11); Layout.preferredWidth: Theme.scaled(35) }
+                        Text { text: Qt.formatDate(new Date(modelData.date), "ddd"); color: Colors.outline; font.pixelSize: Theme.scaled(11); Layout.preferredWidth: Theme.scaled(35) }
                         Text { text: root.getIcon(modelData.hourly[4]?.weatherCode || "113"); color: Theme.powerYellow; font.pixelSize: Theme.scaled(18); Layout.preferredWidth: Theme.scaled(20) }
-                        Text { text: modelData.maxtempC + "°"; color: Theme.text; font.pixelSize: Theme.scaled(13); font.bold: true }
+                        Text { text: modelData.maxtempC + "°"; color: Colors.on_background; font.pixelSize: Theme.scaled(13); font.bold: true }
                     }
                 }
             }
@@ -101,7 +104,7 @@ Rectangle {
         // Loading/Error states
         Text { 
             visible: root.loading
-            text: "Loading..."; color: Theme.surface2
+            text: "Loading..."; color: Colors.outline
             Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter 
         }
     }

@@ -1,3 +1,4 @@
+pragma ComponentBehavior: Bound
 import ".."
 import "../.."
 import "../../Settings"
@@ -63,6 +64,8 @@ Item {
 
                 delegate: Item {
                     id: wsIcon
+
+                    required property var modelData
 
                     readonly property int workspaceId: modelData
                     readonly property real dotSize: Theme.scaled(16)

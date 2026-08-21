@@ -1,3 +1,4 @@
+pragma ComponentBehavior: Bound
 // services/QuickSettingsService.qml
 import QtQuick
 import Quickshell

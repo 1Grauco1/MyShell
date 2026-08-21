@@ -1,3 +1,4 @@
+pragma ComponentBehavior: Bound
 // services/CenterState.qml
 import QtQuick
 import Quickshell

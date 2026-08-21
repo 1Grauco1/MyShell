@@ -1,3 +1,4 @@
+pragma ComponentBehavior: Bound
 import "../.."
 import "../../../"
 import "../../../services"
@@ -46,10 +47,10 @@ ColumnLayout {
                 Layout.fillWidth: true; spacing: Theme.scaled(15)
                 ColumnLayout {
                     spacing: Theme.scaled(2); Layout.fillWidth: true
-                    Text { text: "BLUETOOTH"; color: Theme.blue; font.pixelSize: Theme.scaled(14); font.letterSpacing: 2; font.weight: Font.Black; opacity: 0.8 }
+                    Text { text: "BLUETOOTH"; color: Colors.primary; font.pixelSize: Theme.scaled(14); font.letterSpacing: 2; font.weight: Font.Black; opacity: 0.8 }
                     Text { 
                         text: BluetoothService.powered ? BluetoothService.state.toUpperCase() : "DISABLED"
-                        color: Theme.subtext1; font.pixelSize: Theme.scaled(10); font.weight: Font.Bold; font.letterSpacing: 1
+                        color: Colors.on_surface_variant; font.pixelSize: Theme.scaled(10); font.weight: Font.Bold; font.letterSpacing: 1
                     }
                 }
 
@@ -73,18 +74,18 @@ ColumnLayout {
                     Behavior on color { ColorAnimation { duration: 200 } }
                     Text {
                         id: scanIcon; anchors.centerIn: parent; text: "󰂰"; font.family: Theme.iconFont; font.pixelSize: Theme.scaled(18)
-                        color: BluetoothService.scanning ? Theme.powerYellow : Theme.text
+                        color: BluetoothService.scanning ? Theme.powerYellow : Colors.on_background
                     }
                     MouseArea { id: scanMouse; anchors.fill: parent; hoverEnabled: true; onClicked: BluetoothService.toggleScan() }
                 }
 
                 // Power Button
                 Rectangle {
-                    width: Theme.scaled(44); height: Theme.scaled(44); radius: Theme.scaled(22); color: (powerMouse.containsMouse ? Qt.rgba(1,1,1,0.05) : "transparent"); border.color: BluetoothService.powered ? Theme.blue : Theme.powerRed; clip: true
+                    width: Theme.scaled(44); height: Theme.scaled(44); radius: Theme.scaled(22); color: (powerMouse.containsMouse ? Qt.rgba(1,1,1,0.05) : "transparent"); border.color: BluetoothService.powered ? Colors.primary : Theme.powerRed; clip: true
                     Behavior on color { ColorAnimation { duration: 200 } }
                     Text {
                         anchors.centerIn: parent; text: BluetoothService.powered ? "󰂯" : "󰂲"
-                        font.family: Theme.iconFont; font.pixelSize: Theme.scaled(18); color: BluetoothService.powered ? Theme.blue : Theme.powerRed
+                        font.family: Theme.iconFont; font.pixelSize: Theme.scaled(18); color: BluetoothService.powered ? Colors.primary : Theme.powerRed
                     }
                     MouseArea { id: powerMouse; anchors.fill: parent; hoverEnabled: true; onClicked: BluetoothService.togglePower() }
                 }
@@ -98,11 +99,11 @@ ColumnLayout {
 
                 // Show Unnamed Toggle
                 Rectangle {
-                    Layout.fillWidth: true; height: Theme.scaled(40); radius: Theme.scaled(12); color: (unnamedMouse.containsMouse ? Qt.rgba(1,1,1,0.05) : "transparent"); border.color: root.showUnnamed ? Theme.blue : Theme.glassBorder; clip: true
+                    Layout.fillWidth: true; height: Theme.scaled(40); radius: Theme.scaled(12); color: (unnamedMouse.containsMouse ? Qt.rgba(1,1,1,0.05) : "transparent"); border.color: root.showUnnamed ? Colors.primary : Theme.glassBorder; clip: true
                     RowLayout {
                         anchors.centerIn: parent; spacing: 8
-                        Text { text: root.showUnnamed ? "󰈈" : "󰈉"; font.family: Theme.iconFont; color: root.showUnnamed ? Theme.blue : Theme.text; font.pixelSize: Theme.scaled(14) }
-                        Text { text: "UNNAMED"; color: Theme.text; font.pixelSize: Theme.scaled(8); font.weight: Font.Black; font.letterSpacing: 1 }
+                        Text { text: root.showUnnamed ? "󰈈" : "󰈉"; font.family: Theme.iconFont; color: root.showUnnamed ? Colors.primary : Colors.on_background; font.pixelSize: Theme.scaled(14) }
+                        Text { text: "UNNAMED"; color: Colors.on_background; font.pixelSize: Theme.scaled(8); font.weight: Font.Black; font.letterSpacing: 1 }
                     }
                     MouseArea { id: unnamedMouse; anchors.fill: parent; hoverEnabled: true; onClicked: root.showUnnamed = !root.showUnnamed }
                 }
@@ -122,7 +123,7 @@ ColumnLayout {
                         }
                         Text { 
                             text: "STARTUP"; 
-                            color: Theme.text; font.pixelSize: Theme.scaled(8); font.weight: Font.Black; font.letterSpacing: 1 
+                            color: Colors.on_background; font.pixelSize: Theme.scaled(8); font.weight: Font.Black; font.letterSpacing: 1 
                         }
                     }
                     MouseArea { 
@@ -140,19 +141,19 @@ ColumnLayout {
                 RowLayout {
                     anchors.fill: parent; anchors.margins: Theme.scaled(12); spacing: Theme.scaled(15)
                     Rectangle { width: Theme.scaled(36); height: Theme.scaled(36); radius: Theme.scaled(10); color: Qt.rgba(1,1,1,0.05)
-                        Text { anchors.centerIn: parent; text: getDeviceIcon(BluetoothService.connectedIcon); font.family: Theme.iconFont; font.pixelSize: Theme.scaled(18); color: Theme.blue }
+                        Text { anchors.centerIn: parent; text: getDeviceIcon(BluetoothService.connectedIcon); font.family: Theme.iconFont; font.pixelSize: Theme.scaled(18); color: Colors.primary }
                     }
                     ColumnLayout { spacing: 0; Layout.fillWidth: true
-                        Text { text: BluetoothService.connectedName; color: Theme.text; font.weight: Font.Bold; font.pixelSize: Theme.scaled(13); elide: Text.ElideRight }
+                        Text { text: BluetoothService.connectedName; color: Colors.on_background; font.weight: Font.Bold; font.pixelSize: Theme.scaled(13); elide: Text.ElideRight }
                         Text { 
-                            text: BluetoothService.connectedAddress; color: Theme.surface2; font.pixelSize: Theme.scaled(9); font.weight: Font.Bold 
+                            text: BluetoothService.connectedAddress; color: Colors.outline; font.pixelSize: Theme.scaled(9); font.weight: Font.Bold 
                         }
                     }
                     
                     // Disconnect Button
                     ColumnLayout { spacing: 0; Layout.alignment: Qt.AlignRight; visible: BluetoothService.connectedBattery !== -1
                         Text { text: BluetoothService.connectedBattery + "%"; color: Theme.powerGreen; font.pixelSize: Theme.scaled(10); font.weight: Font.Black; horizontalAlignment: Text.AlignRight }
-                        Text { text: "BATTERY"; color: Theme.surface2; font.pixelSize: Theme.scaled(8); font.weight: Font.Black; horizontalAlignment: Text.AlignRight }
+                        Text { text: "BATTERY"; color: Colors.outline; font.pixelSize: Theme.scaled(8); font.weight: Font.Black; horizontalAlignment: Text.AlignRight }
                     }
                     
                     Rectangle {
@@ -182,8 +183,10 @@ ColumnLayout {
 
             delegate: Rectangle {
                 id: delegateRoot
-                width: deviceList.width; height: Theme.scaled(75); color: modelData.connected ? Theme.surface0 : (delegateMouse.containsMouse ? Colors.background : Theme.menuBackground)
-                radius: Theme.scaled(20); border.color: modelData.connected ? Theme.blue : (delegateMouse.containsMouse ? Theme.surface2 : Theme.surface1)
+                required property var modelData
+
+                width: deviceList.width; height: Theme.scaled(75); color: modelData.connected ? Colors.surface_variant : (delegateMouse.containsMouse ? Colors.background : Theme.menuBackground)
+                radius: Theme.scaled(20); border.color: modelData.connected ? Colors.primary : (delegateMouse.containsMouse ? Colors.outline : Colors.surface_variant)
                 border.width: modelData.connected ? 2 : 1
                 scale: delegateMouse.pressed ? 0.98 : 1.0
                 
@@ -205,16 +208,16 @@ ColumnLayout {
                     anchors.fill: parent; anchors.margins: Theme.scaled(12); spacing: Theme.scaled(15)
                     
                     Rectangle {
-                        width: Theme.scaled(44); height: Theme.scaled(44); radius: Theme.scaled(12); color: modelData.connected ? Theme.blue : Theme.mantle
-                        Text { anchors.centerIn: parent; text: getDeviceIcon(modelData.icon); font.family: Theme.iconFont; font.pixelSize: Theme.scaled(22); color: modelData.connected ? Colors.background : Theme.text }
+                        width: Theme.scaled(44); height: Theme.scaled(44); radius: Theme.scaled(12); color: modelData.connected ? Colors.primary : Colors.surface
+                        Text { anchors.centerIn: parent; text: getDeviceIcon(modelData.icon); font.family: Theme.iconFont; font.pixelSize: Theme.scaled(22); color: modelData.connected ? Colors.background : Colors.on_background }
                     }
 
                     ColumnLayout {
                         Layout.fillWidth: true; spacing: 0
-                        Text { text: modelData.name; color: Theme.text; font.weight: Font.Bold; font.pixelSize: Theme.scaled(14); elide: Text.ElideRight }
+                        Text { text: modelData.name; color: Colors.on_background; font.weight: Font.Bold; font.pixelSize: Theme.scaled(14); elide: Text.ElideRight }
                         Text { 
                             text: modelData.connected ? "CONNECTED" : (modelData.paired ? "PAIRED" : "READY")
-                            color: modelData.connected ? Theme.blue : Theme.subtext1; font.pixelSize: Theme.scaled(9); font.weight: Font.Black 
+                            color: modelData.connected ? Colors.primary : Colors.on_surface_variant; font.pixelSize: Theme.scaled(9); font.weight: Font.Black 
                         }
                     }
 
@@ -225,7 +228,7 @@ ColumnLayout {
 
                         // Forget/Remove
                         Rectangle {
-                            width: Theme.scaled(40); height: Theme.scaled(40); radius: Theme.scaled(12); color: (forgetMouse.containsMouse ? Colors.background : Theme.mantle); border.color: Theme.surface1
+                            width: Theme.scaled(40); height: Theme.scaled(40); radius: Theme.scaled(12); color: (forgetMouse.containsMouse ? Colors.background : Colors.surface); border.color: Colors.surface_variant
                             visible: modelData.paired
                             Behavior on color { ColorAnimation { duration: 200 } }
                             Text { anchors.centerIn: parent; text: "󰆴"; font.family: Theme.iconFont; color: Theme.powerRed; font.pixelSize: Theme.scaled(18) }
@@ -235,7 +238,7 @@ ColumnLayout {
                         // Connect/Disconnect Toggle Icon
                         Rectangle {
                             width: Theme.scaled(40); height: Theme.scaled(40); radius: Theme.scaled(12); 
-                            color: modelData.connected ? (actionMouse.containsMouse ? Theme.powerRed : Theme.powerRed) : (actionMouse.containsMouse ? Theme.blue : Theme.blue)
+                            color: modelData.connected ? (actionMouse.containsMouse ? Theme.powerRed : Theme.powerRed) : (actionMouse.containsMouse ? Colors.primary : Colors.primary)
                             Behavior on color { ColorAnimation { duration: 200 } }
                             Text { 
                                 anchors.centerIn: parent
@@ -276,8 +279,8 @@ ColumnLayout {
             Text { text: "󰂲"; font.family: Theme.iconFont; font.pixelSize: Theme.scaled(48); color: Theme.powerRed; Layout.alignment: Qt.AlignHCenter }
             ColumnLayout {
                 spacing: Theme.scaled(5); Layout.alignment: Qt.AlignHCenter
-                Text { text: "SERVICE ERROR"; color: Theme.text; font.pixelSize: Theme.scaled(16); font.weight: Font.Black; Layout.alignment: Qt.AlignHCenter }
-                Text { text: "The Bluetooth daemon is not running or has crashed."; color: Theme.subtext1; font.pixelSize: Theme.scaled(10); font.weight: Font.Bold; Layout.alignment: Qt.AlignHCenter; horizontalAlignment: Text.AlignHCenter; wrapMode: Text.WordWrap; Layout.fillWidth: true }
+                Text { text: "SERVICE ERROR"; color: Colors.on_background; font.pixelSize: Theme.scaled(16); font.weight: Font.Black; Layout.alignment: Qt.AlignHCenter }
+                Text { text: "The Bluetooth daemon is not running or has crashed."; color: Colors.on_surface_variant; font.pixelSize: Theme.scaled(10); font.weight: Font.Bold; Layout.alignment: Qt.AlignHCenter; horizontalAlignment: Text.AlignHCenter; wrapMode: Text.WordWrap; Layout.fillWidth: true }
             }
             Rectangle {
                 Layout.alignment: Qt.AlignHCenter; width: Theme.scaled(200); height: Theme.scaled(48); radius: Theme.scaled(14); color: (restartMouse.containsMouse ? Theme.powerRed : "transparent"); border.color: Theme.powerRed
@@ -294,8 +297,8 @@ ColumnLayout {
         visible: BluetoothService.powered && BluetoothService.serviceActive && deviceList.displayDevices.length === 0
         ColumnLayout {
             anchors.centerIn: parent; spacing: 10
-            Text { text: "󰂲"; font.family: Theme.iconFont; font.pixelSize: Theme.scaled(32); color: Theme.surface2; Layout.alignment: Qt.AlignHCenter }
-            Text { text: "NO DEVICES FOUND"; color: Theme.surface2; font.pixelSize: Theme.scaled(10); font.weight: Font.Black; font.letterSpacing: 1; Layout.alignment: Qt.AlignHCenter }
+            Text { text: "󰂲"; font.family: Theme.iconFont; font.pixelSize: Theme.scaled(32); color: Colors.outline; Layout.alignment: Qt.AlignHCenter }
+            Text { text: "NO DEVICES FOUND"; color: Colors.outline; font.pixelSize: Theme.scaled(10); font.weight: Font.Black; font.letterSpacing: 1; Layout.alignment: Qt.AlignHCenter }
         }
     }
 }

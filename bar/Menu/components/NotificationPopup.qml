@@ -1,3 +1,4 @@
+pragma ComponentBehavior: Bound
 import "../../../services"
 import "../../../Settings"
 import QtQuick
@@ -56,6 +57,8 @@ PanelWindow {
         Repeater {
             model: activeNotifications
             delegate: NotificationItem {
+                required property int index
+
                 notification: activeNotifications.get(index)
                 Layout.fillWidth: true
                 onAutoDismissed: (id) => NotificationService.dismissNotification(id)

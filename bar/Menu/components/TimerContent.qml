@@ -1,3 +1,4 @@
+pragma ComponentBehavior: Bound
 import QtQuick
 import QtQuick.Layouts
 import "../.."
@@ -17,8 +18,8 @@ Item {
 
     readonly property color phaseColor: {
         if (ProductivityService.isBeeping) return Theme.powerRed;
-        if (ProductivityService.phase === "shortBreak") return Theme.green;
-        if (ProductivityService.phase === "longBreak") return Theme.lavender;
+        if (ProductivityService.phase === "shortBreak") return Colors.tertiary;
+        if (ProductivityService.phase === "longBreak") return Colors.secondary;
         return Theme.accentColor;
     }
 
@@ -93,7 +94,7 @@ Item {
             text: "󰘚"
             font.family: Theme.iconFont
             font.pixelSize: Theme.scaled(14)
-            color: root.settingsOpen ? Theme.accentColor : (gearMouse.containsMouse ? Theme.text : Theme.subtext1)
+            color: root.settingsOpen ? Theme.accentColor : (gearMouse.containsMouse ? Colors.on_background : Colors.on_surface_variant)
             Behavior on color { ColorAnimation { duration: Theme.animFast } }
         }
         MouseArea {
@@ -165,7 +166,7 @@ Item {
                     font.pixelSize: Theme.isSmallScreen ? Theme.scaled(44) : Theme.scaled(54)
                     font.weight: Font.Black
                     font.letterSpacing: 1
-                    color: ProductivityService.isBeeping ? Theme.powerRed : Theme.text
+                    color: ProductivityService.isBeeping ? Theme.powerRed : Colors.on_background
                     Behavior on color { ColorAnimation { duration: 250 } }
                 }
                 Text {
@@ -174,7 +175,7 @@ Item {
                     font.pixelSize: Theme.scaled(9)
                     font.weight: Font.Bold
                     font.letterSpacing: 3
-                    color: Theme.subtext1
+                    color: Colors.on_surface_variant
                 }
             }
 
@@ -194,6 +195,8 @@ Item {
             Repeater {
                 model: ProductivityService.breakEvery
                 delegate: Rectangle {
+                    required property int index
+
                     width: Theme.scaled(7)
                     height: Theme.scaled(7)
                     radius: width / 2
@@ -212,7 +215,7 @@ Item {
                 text: "Skip"
                 font.pixelSize: Theme.scaled(11)
                 font.weight: Font.Bold
-                color: skipHover.containsMouse ? Theme.text : Theme.subtext1
+                color: skipHover.containsMouse ? Colors.on_background : Colors.on_surface_variant
                 MouseArea {
                     id: skipHover
                     anchors.fill: parent
@@ -242,7 +245,7 @@ Item {
                     text: ProductivityService.isBeeping ? "󰂚" : (ProductivityService.running ? "󰏤" : "󰐊")
                     font.family: Theme.iconFont
                     font.pixelSize: Theme.scaled(26)
-                    color: Theme.base
+                    color: Colors.background
                     anchors.horizontalCenterOffset: (!ProductivityService.running && !ProductivityService.isBeeping) ? 3 : 0
                 }
 
@@ -257,7 +260,7 @@ Item {
                 text: "Reset"
                 font.pixelSize: Theme.scaled(11)
                 font.weight: Font.Bold
-                color: resetHover.containsMouse ? Theme.text : Theme.subtext1
+                color: resetHover.containsMouse ? Colors.on_background : Colors.on_surface_variant
                 MouseArea {
                     id: resetHover
                     anchors.fill: parent
@@ -306,7 +309,7 @@ Item {
                         implicitHeight: Theme.scaled(34)
                         implicitWidth: autoText.implicitWidth + Theme.scaled(24)
                         radius: Theme.scaled(10)
-                        color: ProductivityService.autoAdvance ? Qt.alpha(Theme.accentColor, 0.2) : Theme.surface0
+                        color: ProductivityService.autoAdvance ? Qt.alpha(Theme.accentColor, 0.2) : Colors.surface_variant
                         border.color: ProductivityService.autoAdvance ? Theme.accentColor : "transparent"
                         border.width: 1
                         Text {
@@ -316,7 +319,7 @@ Item {
                             font.pixelSize: Theme.scaled(10)
                             font.weight: Font.Black
                             font.letterSpacing: 1
-                            color: ProductivityService.autoAdvance ? Theme.accentColor : Theme.subtext1
+                            color: ProductivityService.autoAdvance ? Theme.accentColor : Colors.on_surface_variant
                         }
                         MouseArea {
                             anchors.fill: parent
@@ -329,7 +332,7 @@ Item {
                         implicitHeight: Theme.scaled(34)
                         implicitWidth: cycleText.implicitWidth + Theme.scaled(24)
                         radius: Theme.scaled(10)
-                        color: Theme.surface0
+                        color: Colors.surface_variant
                         Text {
                             id: cycleText
                             anchors.centerIn: parent
@@ -337,7 +340,7 @@ Item {
                             font.pixelSize: Theme.scaled(10)
                             font.weight: Font.Black
                             font.letterSpacing: 1
-                            color: Theme.subtext1
+                            color: Colors.on_surface_variant
                         }
                         MouseArea {
                             anchors.fill: parent
@@ -360,7 +363,7 @@ Item {
         implicitHeight: Theme.scaled(34)
         implicitWidth: Theme.scaled(140)
         radius: Theme.scaled(10)
-        color: Theme.surface0
+        color: Colors.surface_variant
         border.color: Theme.glassBorder
         border.width: 1
 
@@ -375,14 +378,14 @@ Item {
                 font.pixelSize: Theme.scaled(9)
                 font.weight: Font.Black
                 font.letterSpacing: 1
-                color: Theme.subtext1
+                color: Colors.on_surface_variant
             }
             Item { Layout.fillWidth: true }
             Text {
                 text: "−"
                 font.pixelSize: Theme.scaled(14)
                 font.weight: Font.Bold
-                color: minus.containsMouse ? Theme.text : Theme.subtext1
+                color: minus.containsMouse ? Colors.on_background : Colors.on_surface_variant
                 MouseArea {
                     id: minus
                     anchors.fill: parent
@@ -395,7 +398,7 @@ Item {
                 text: step.value
                 font.pixelSize: Theme.scaled(11)
                 font.weight: Font.Black
-                color: Theme.text
+                color: Colors.on_background
                 horizontalAlignment: Text.AlignHCenter
                 Layout.minimumWidth: Theme.scaled(34)
             }
@@ -403,7 +406,7 @@ Item {
                 text: "+"
                 font.pixelSize: Theme.scaled(14)
                 font.weight: Font.Bold
-                color: plus.containsMouse ? Theme.text : Theme.subtext1
+                color: plus.containsMouse ? Colors.on_background : Colors.on_surface_variant
                 MouseArea {
                     id: plus
                     anchors.fill: parent
