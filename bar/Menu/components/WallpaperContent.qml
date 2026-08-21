@@ -1,3 +1,4 @@
+pragma ComponentBehavior: Bound
 import QtQuick
 import QtQuick.Layouts
 import QtQuick.Controls
@@ -78,8 +79,10 @@ ColumnLayout {
         Repeater {
             model: ["Wallpaper", "Animated"]
             delegate: Rectangle {
+                required property var modelData
+
                 width: Theme.scaled(100); height: Theme.scaled(32); radius: Theme.scaled(10)
-                color: root.activeSubTab === modelData ? Theme.accentColor : (subTabMouse.containsMouse ? Theme.surface1 : Theme.surface0)
+                color: root.activeSubTab === modelData ? Theme.accentColor : (subTabMouse.containsMouse ? Colors.surface_variant : Colors.surface_variant)
                 border.color: Theme.glassBorder
                 scale: subTabMouse.pressed ? 0.95 : 1.0
                 Behavior on scale { NumberAnimation { duration: 100 } }
@@ -90,7 +93,7 @@ ColumnLayout {
                     text: modelData
                     font.pixelSize: Theme.scaled(11)
                     font.weight: Font.Black
-                    color: root.activeSubTab === modelData ? Theme.base : (subTabMouse.containsMouse ? Theme.text : Theme.subtext1)
+                    color: root.activeSubTab === modelData ? Colors.background : (subTabMouse.containsMouse ? Colors.on_background : Colors.on_surface_variant)
                 }
                 MouseArea { 
                     id: subTabMouse
@@ -110,10 +113,10 @@ ColumnLayout {
             spacing: Theme.scaled(8)
             visible: thumbGen.running
             Text {
-                text: "󱑐"; font.family: Theme.iconFont; font.pixelSize: Theme.scaled(14); color: Theme.blue
+                text: "󱑐"; font.family: Theme.iconFont; font.pixelSize: Theme.scaled(14); color: Colors.primary
                 RotationAnimator on rotation { from: 0; to: 360; duration: 1000; loops: Animation.Infinite; running: thumbGen.running }
             }
-            Text { text: "Updating..."; font.pixelSize: Theme.scaled(10); font.weight: Font.Black; color: Theme.subtext1 }
+            Text { text: "Updating..."; font.pixelSize: Theme.scaled(10); font.weight: Font.Black; color: Colors.on_surface_variant }
         }
         
         // Refresh Button
@@ -121,7 +124,7 @@ ColumnLayout {
             width: Theme.scaled(32); height: Theme.scaled(32); radius: Theme.scaled(8)
             color: refreshMouse.containsMouse ? Qt.rgba(1,1,1,0.1) : "transparent"
             visible: !thumbGen.running
-            Text { anchors.centerIn: parent; text: "󰑐"; font.family: Theme.iconFont; font.pixelSize: Theme.scaled(16); color: refreshMouse.containsMouse ? Theme.text : Theme.subtext1 }
+            Text { anchors.centerIn: parent; text: "󰑐"; font.family: Theme.iconFont; font.pixelSize: Theme.scaled(16); color: refreshMouse.containsMouse ? Colors.on_background : Colors.on_surface_variant }
             MouseArea { id: refreshMouse; anchors.fill: parent; hoverEnabled: true; onClicked: refreshThumbnails() }
         }
     }
@@ -165,23 +168,28 @@ ColumnLayout {
                         onCountChanged: if (root.visible) refreshThumbnails();
                     }
                     delegate: Rectangle {
+                        id: wallDelegate
+                        required property int index
+                        required property string fileName
+                        required property url fileUrl
+
                         width: (wallFlow.width - Theme.scaled(45)) / 4
                         height: width * 0.6
                         radius: Theme.scaled(13)
-                        color: Theme.surface1
+                        color: Colors.surface_variant
                         clip: true
                         property bool isFocused: index === root.selectedIndex
                         border.color: isFocused ? Theme.accentColor : Theme.glassBorder
                         border.width: isFocused ? 3 : 1
-                        
+
                         Loader {
                             id: thumbLoader; anchors.fill: parent
-                            sourceComponent: (fileName && root.thumbnailsReady) ? thumbComponent : undefined
+                            sourceComponent: (wallDelegate.fileName && root.thumbnailsReady) ? thumbComponent : undefined
                             Component {
                                 id: thumbComponent
                                 Image {
                                     anchors.fill: parent; anchors.margins: 2
-                                    source: (fileName && fileName.lastIndexOf('.') > 0) ? ("file://" + Quickshell.env("HOME") + "/.cache/wallpaper_thumbs/" + fileName.substring(0, fileName.lastIndexOf('.')) + ".png") : ""
+                                    source: (wallDelegate.fileName && wallDelegate.fileName.lastIndexOf('.') > 0) ? ("file://" + Quickshell.env("HOME") + "/.cache/wallpaper_thumbs/" + wallDelegate.fileName.substring(0, wallDelegate.fileName.lastIndexOf('.')) + ".png") : ""
                                     fillMode: Image.PreserveAspectCrop; cache: false; asynchronous: true
                                     opacity: status === Image.Ready ? 1.0 : 0.0
                                     Behavior on opacity { NumberAnimation { duration: 400 } }
@@ -190,7 +198,7 @@ ColumnLayout {
                         }
                         
                         Text {
-                            anchors.centerIn: parent; text: "󱑐"; font.family: Theme.iconFont; font.pixelSize: Theme.scaled(20); color: Theme.blue
+                            anchors.centerIn: parent; text: "󱑐"; font.family: Theme.iconFont; font.pixelSize: Theme.scaled(20); color: Colors.primary
                             visible: !root.thumbnailsReady || (thumbLoader.item && thumbLoader.item.status !== Image.Ready)
                             RotationAnimator on rotation { from: 0; to: 360; duration: 1000; loops: Animation.Infinite; running: parent.visible }
                         }
@@ -219,20 +227,20 @@ ColumnLayout {
                     text: "󰉏"
                     font.family: Theme.iconFont
                     font.pixelSize: Theme.scaled(48)
-                    color: Theme.surface2
+                    color: Colors.outline
                     Layout.alignment: Qt.AlignHCenter
                 }
                 Text {
                     text: "Directory is empty"
                     font.pixelSize: Theme.scaled(14)
                     font.weight: Font.Bold
-                    color: Theme.subtext1
+                    color: Colors.on_surface_variant
                     Layout.alignment: Qt.AlignHCenter
                 }
                 Text {
                     text: "~/Pictures/Wallpapers"
                     font.pixelSize: Theme.scaled(11)
-                    color: Theme.surface2
+                    color: Colors.outline
                     Layout.alignment: Qt.AlignHCenter
                 }
             }
@@ -259,23 +267,28 @@ ColumnLayout {
                         onCountChanged: if (root.visible) refreshThumbnails();
                     }
                     delegate: Rectangle {
+                        id: animDelegate
+                        required property int index
+                        required property string fileName
+                        required property url fileUrl
+
                         width: (animFlow.width - Theme.scaled(45)) / 4
                         height: width * 0.6
                         radius: Theme.scaled(12)
-                        color: Theme.surface1
+                        color: Colors.surface_variant
                         clip: true
                         property bool isFocused: index === root.selectedIndex
                         border.color: isFocused ? Theme.accentColor : Theme.glassBorder
                         border.width: isFocused ? 3 : 1
-                        
+
                         Loader {
                             id: animThumbLoader; anchors.fill: parent
-                            sourceComponent: (fileName && root.thumbnailsReady) ? animThumbComponent : undefined
+                            sourceComponent: (animDelegate.fileName && root.thumbnailsReady) ? animThumbComponent : undefined
                             Component {
                                 id: animThumbComponent
                                 Image {
                                     anchors.fill: parent; anchors.margins: 2
-                                    source: (fileName && fileName.lastIndexOf('.') > 0) ? ("file://" + Quickshell.env("HOME") + "/.cache/animation_thumbs/" + fileName.substring(0, fileName.lastIndexOf('.')) + ".png") : ""
+                                    source: (animDelegate.fileName && animDelegate.fileName.lastIndexOf('.') > 0) ? ("file://" + Quickshell.env("HOME") + "/.cache/animation_thumbs/" + animDelegate.fileName.substring(0, animDelegate.fileName.lastIndexOf('.')) + ".png") : ""
                                     fillMode: Image.PreserveAspectCrop; cache: false; asynchronous: true
                                     opacity: status === Image.Ready ? 1.0 : 0.0
                                     Behavior on opacity { NumberAnimation { duration: 400 } }
@@ -300,20 +313,20 @@ ColumnLayout {
                     text: "󰕧"
                     font.family: Theme.iconFont
                     font.pixelSize: Theme.scaled(48)
-                    color: Theme.surface2
+                    color: Colors.outline
                     Layout.alignment: Qt.AlignHCenter
                 }
                 Text {
                     text: "Directory is empty"
                     font.pixelSize: Theme.scaled(14)
                     font.weight: Font.Bold
-                    color: Theme.subtext1
+                    color: Colors.on_surface_variant
                     Layout.alignment: Qt.AlignHCenter
                 }
                 Text {
                     text: "~/Videos/Animations"
                     font.pixelSize: Theme.scaled(11)
-                    color: Theme.surface2
+                    color: Colors.outline
                     Layout.alignment: Qt.AlignHCenter
                 }
             }
@@ -333,10 +346,10 @@ ColumnLayout {
         killawww.running = true; killMpv.running = true;
         videoDelay.videoPath = path.replace("file://", ""); videoDelay.start();
     }
-    function log(msg) { logger.command = ["sh", "-c", "echo '[$(date +%T)] " + msg + "' >> " + logPath]; logger.running = true; }
+    function log(msg) { logger.command = ["sh", "-c", "echo \"[$(date +%T)] $1\" >> \"$2\"", "--", msg, root.logPath]; logger.running = true; }
 
-    Timer { id: wallDelay; property string wallPath: ""; property string wallTransition: "fade"; interval: 300; onTriggered: { setWall.command = ["sh", "-c", "awww img --resize=crop '" + wallPath + "' --transition-type " + wallTransition + " --transition-duration 0.5 --transition-fps 60 >> " + root.logPath + " 2>&1 && " + PathSettings.scriptsDir + "/g_ant-theme.sh --autoselect"]; setWall.running = true; } }
-    Timer { id: videoDelay; property string videoPath: ""; interval: 400; onTriggered: { mpvProcess.command = ["sh", "-c", "MON=$(hyprctl monitors -j | python3 -c 'import json,sys; print(json.load(sys.stdin)[0][\"name\"])' 2>/dev/null); [ -z \"$MON\" ] && MON=eDP-1; mpvpaper -vsf -o 'no-audio loop' \"$MON\" '" + videoPath + "' >> " + root.logPath + " 2>&1"]; mpvProcess.running = true; CenterState.close(); } }
+    Timer { id: wallDelay; property string wallPath: ""; property string wallTransition: "fade"; interval: 300; onTriggered: { setWall.command = ["sh", "-c", "awww img --resize=crop \"$1\" --transition-type \"$2\" --transition-duration 0.5 --transition-fps 60 >> \"$3\" 2>&1 && \"" + PathSettings.scriptsDir + "/g_ant-theme.sh\" --autoselect", "--", wallPath, wallTransition, root.logPath]; setWall.running = true; } }
+    Timer { id: videoDelay; property string videoPath: ""; interval: 400; onTriggered: { mpvProcess.command = ["sh", "-c", "MON=$(hyprctl monitors -j | python3 -c 'import json,sys; print(json.load(sys.stdin)[0][\"name\"])' 2>/dev/null); [ -z \"$MON\" ] && MON=eDP-1; mpvpaper -vsf -o 'no-audio loop' \"$MON\" \"$1\" >> \"$2\" 2>&1", "--", videoPath, root.logPath]; mpvProcess.running = true; CenterState.close(); } }
 
     Process { id: logger }
     Process { id: awwwDaemon; command: ["sh", "-c", "pgrep -x awww-daemon >/dev/null || (mkdir -p \"$HOME/.local/state/g_ant\" && awww-daemon >> \"$HOME/.local/state/g_ant/g_ant.log\" 2>&1)"] }
@@ -344,7 +357,7 @@ ColumnLayout {
     Process { id: killawww; command: ["killall", "awww-daemon"] }
     Process { id: killMpv; command: ["killall", "mpvpaper"] }
     Process { id: mpvProcess }
-    Process { id: saveCurrentWall; property string path: ""; command: ["sh", "-c", "mkdir -p " + Quickshell.env("HOME") + "/.config && echo '" + path + "' > " + Quickshell.env("HOME") + "/.config/current_wallpaper.txt"] }
+    Process { id: saveCurrentWall; property string path: ""; command: ["sh", "-c", "mkdir -p \"$HOME/.config\" && echo \"$1\" > \"$HOME/.config/current_wallpaper.txt\"", "--", path] }
     Process { id: thumbGen; command: ["python3", (Quickshell.env("G_ANT_ROOT") ? Quickshell.env("G_ANT_ROOT") : Quickshell.env("HOME") + "/.config/quickshell") + "/services/generate_thumbnails.py"]; onRunningChanged: { if (!running) { root.thumbnailsReady = true; root.refreshTrigger++; } } }
     Component.onCompleted: refreshThumbnails()
 
