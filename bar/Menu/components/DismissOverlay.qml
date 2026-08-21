@@ -1,3 +1,4 @@
+pragma ComponentBehavior: Bound
 import QtQuick
 import Quickshell
 import Quickshell.Wayland
@@ -19,14 +20,15 @@ PanelWindow {
     WlrLayershell.anchors.left: true
     WlrLayershell.anchors.right: true
     color: "transparent"
-    visible: MenuService.openMenus.length > 0 || (typeof DynamicIslandService !== "undefined" && DynamicIslandService.active)
+    visible: MenuService.openMenus.length > 0 || DynamicIslandService.active
 
     MouseArea {
         anchors.fill: parent
         acceptedButtons: Qt.LeftButton | Qt.RightButton | Qt.MiddleButton
-        
+
         onPressed: (mouse) => {
             MenuService.closeAll();
+            DynamicIslandService.close();
         }
     }
 }
