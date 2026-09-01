@@ -151,10 +151,13 @@ Item {
     // Fallback poll: keeps state fresh even if nmcli monitor exits or misses events
     Timer {
         id: fallbackPoll
-        interval: 5000
+        interval: (Variables.quickSettingsOpen || Variables.controlCenterOpen)
+            ? Variables.mediumInterval
+            : Variables.lazyInterval
         running: true
         repeat: true
         onTriggered: service.refresh(false)
+        onIntervalChanged: restart()
     }
 
     Timer {

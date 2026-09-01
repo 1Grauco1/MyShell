@@ -15,6 +15,7 @@ Item {
     property bool showUpload: false
     property real rxPrev: 0
     property real txPrev: 0
+    property real lastSampleMs: 0
     property int downSpeed: 0
     property int upSpeed: 0
 
@@ -96,13 +97,15 @@ Item {
                 if (parts[0] === "SPEED") {
                     const rx = parseFloat(parts[1]);
                     const tx = parseFloat(parts[2]);
-                    const dt = (refreshTimer.interval / 1000.0);
-                    if (rxPrev > 0 && dt > 0) {
+                    const now = Date.now();
+                    const dt = lastSampleMs > 0 ? (now - lastSampleMs) / 1000.0 : 0;
+                    if (lastSampleMs > 0 && dt > 0) {
                         downSpeed = Math.max(0, Math.floor(((rx - rxPrev) / 1024) / dt));
                         upSpeed = Math.max(0, Math.floor(((tx - txPrev) / 1024) / dt));
                     }
                     rxPrev = rx;
                     txPrev = tx;
+                    lastSampleMs = now;
                 }
             }
         }
@@ -110,12 +113,15 @@ Item {
 
     Timer {
         id: refreshTimer
-        interval: (outerContainer.containsMouse || Variables.quickSettingsOpen) ? Variables.fastInterval : Variables.mediumInterval
+        interval: (outerContainer.containsMouse || Variables.quickSettingsOpen)
+            ? Variables.fastInterval
+            : Variables.lazyInterval
         running: true
         repeat: true
         onTriggered: {
             netExec.running = false;
             netExec.running = true;
         }
+        onIntervalChanged: restart()
     }
 }

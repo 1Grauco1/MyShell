@@ -262,7 +262,7 @@ PopupWindow {
     }
 
     Timer {
-        interval: 3600000 // Check every hour
+        interval: ((g_antData?.updates || 0) + (shellData?.updates || 0)) > 0 ? 3600000 : 4 * 3600000 // Check every hour with updates pending, every 4h when up to date
         running: true
         repeat: true
         triggeredOnStart: true
@@ -270,5 +270,6 @@ PopupWindow {
             updateProc.running = false;
             updateProc.running = true;
         }
+        onIntervalChanged: restart()
     }
 }
