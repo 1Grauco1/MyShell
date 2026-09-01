@@ -19,7 +19,6 @@ Item {
     property bool mediaFocus: true
     
     // --- "Unbreakable" Variables ---
-    property var _playerStack: ([])        
     property var _playerStates: ({})       
     property bool _initialized: false
     property bool _isResetting: false
@@ -101,11 +100,6 @@ Item {
         for (let i = 0; i < players.length; i++) {
             let other = players[i];
             if (other && other !== newPlayer && other.playbackState === MprisPlaybackState.Playing) {
-                if (service.trackedPlayer === other && !isBlacklisted(other)) {
-                    let idx = _playerStack.indexOf(other);
-                    if (idx !== -1) _playerStack.splice(idx, 1);
-                    _playerStack.push(other);
-                }
                 other.pause();
             }
         }
@@ -244,8 +238,6 @@ Item {
                 updateTrackedPlayer(obj);
         }
         onObjectRemoved: (key, obj) => {
-            let idx = _playerStack.indexOf(obj);
-            if (idx !== -1) _playerStack.splice(idx, 1);
             
             if (service.pinnedPlayer === obj) service.pinnedPlayer = null;
             
