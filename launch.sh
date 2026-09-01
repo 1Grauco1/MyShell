@@ -69,6 +69,10 @@ show_usage() {
     echo "  media                     Toggle Media Player Popup"
     echo "  media-next                Next Track"
     echo "  media-prev                Previous Track"
+    echo "  settings                  Toggle Settings Window"
+    echo "  setconfig <key>=<value>   Set a setting at runtime (e.g. bar.height=36)"
+    echo "  logs                      Show quickshell log output"
+    echo "  watch                     Restart shell on config changes (needs inotifywait)"
     echo "  restart | reload          Restart Quickshell"
     echo "  stop                      Stop Quickshell"
     echo ""
@@ -146,6 +150,26 @@ case "$1" in
         ;;
     settings)
         send_cmd "settings"
+        ;;
+    logs)
+        quickshell log "$@" 2>&1
+        ;;
+    watch)
+        if ! command -v inotifywait >/dev/null 2>&1; then
+            echo "watch requires 'inotifywait' (install inotify-tools), or use: $0 restart"
+            exit 1
+        fi
+        echo "Watching $SHELL_DIR for changes... (Ctrl+C to stop)"
+        quickshell -d -p "$SHELL_DIR" &
+        while true; do
+            inotifywait -q -r -e modify -e create -e delete \
+                --exclude '\.git|settings\.json' "$SHELL_DIR" >/dev/null 2>&1
+            echo "Change detected, restarting..."
+            pkill -x quickshell
+            pkill -x .quickshell-wra
+            sleep 0.3
+            quickshell -d -p "$SHELL_DIR" &
+        done
         ;;
     "")
         show_usage
