@@ -29,24 +29,33 @@ def read_cpu_all():
 
 # Cache static system info
 cpu_model = ""
-curr_freq_mhz = 0
 core_count = 0
 try:
     with open("/proc/cpuinfo", "r") as f:
         for line in f:
             if "model name" in line and not cpu_model:
                 cpu_model = line.split(":", 1)[1].strip()
-            elif "cpu MHz" in line and curr_freq_mhz == 0:
-                try:
-                    curr_freq_mhz = float(line.split(":", 1)[1].strip())
-                except Exception:
-                    pass
             elif "processor" in line:
                 core_count += 1
 except Exception:
     pass
 
-freq_str = f"{round(curr_freq_mhz/1000, 2)}GHz" if curr_freq_mhz else "N/A"
+def read_mhz():
+    try:
+        with open("/sys/devices/system/cpu/cpu0/cpufreq/scaling_cur_freq", "r") as f:
+            khz = float(f.read().strip())
+            if khz > 0:
+                return khz / 1000.0
+    except Exception:
+        pass
+    try:
+        with open("/proc/cpuinfo", "r") as f:
+            for line in f:
+                if "cpu MHz" in line:
+                    return float(line.split(":", 1)[1].strip())
+    except Exception:
+        pass
+    return 0.0
 
 os_name = "NixOS"
 if os.path.exists("/etc/os-release"):
@@ -143,6 +152,9 @@ while True:
         except Exception:
             pass
 
+        mhz = read_mhz()
+        freq_str = f"{round(mhz/1000, 2)}GHz" if mhz else "N/A"
+
         data = {
             "cpu": cpu_overall,
             "mem": mem_perc,
@@ -152,7 +164,7 @@ while True:
             "fs": fs_perc,
             "cpu_model": cpu_model,
             "freq": freq_str,
-            "arch": os_name,
+            "os_name": os_name,
             "kernel": kernel,
             "ip": ip_addr,
             "cores": core_usages,

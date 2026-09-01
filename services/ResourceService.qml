@@ -17,7 +17,7 @@ Item {
     property int fs: 0
     property string cpuModel: ""
     property string freq: ""
-    property string arch: ""
+    property string osName: ""
     property string kernel: ""
     property string ip: ""
     property var coreUsages: []
@@ -47,7 +47,7 @@ Item {
                     service.fs = data.fs ?? 0;
                     service.cpuModel = data.cpu_model ?? "";
                     service.freq = data.freq ?? "";
-                    service.arch = data.arch ?? "";
+                    service.osName = data.os_name ?? "";
                     service.kernel = data.kernel ?? "";
                     service.ip = data.ip ?? "";
                     service.coreUsages = data.cores ?? [];
