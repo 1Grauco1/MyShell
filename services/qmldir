@@ -1,5 +1,6 @@
 singleton BatteryService BatteryService.qml
 singleton BluetoothService BluetoothService.qml
+singleton BrightnessService BrightnessService.qml
 singleton CaffeineService CaffeineService.qml
 singleton CenterState CenterState.qml
 singleton DynamicIslandService DynamicIslandService.qml

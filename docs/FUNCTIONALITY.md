@@ -6,15 +6,16 @@ How every feature is triggered and how it works internally.
 
 ```
 Hyprland binds ──┐
-                 ├─> handleCommand() (shell.qml) ──> State singletons ──> Loader ──> Windows
+                 ├─> CommandRouter.handleCommand() (services/CommandRouter.qml) ──> State singletons ──> Loader ──> Windows
 launch.sh / IPC ─┤                                        │
 Bar clicks ──────┘                                        └──> Services ──> scripts/* ──> system tools
 ```
 
-- **shell.qml** is the root. It owns the IPC handler, Hyprland global shortcuts, the central
-  command dispatcher (`handleCommand()`), and lazily instantiates every overlay window via
-  `Loader` (windows only exist while their state singleton says they are active).
-- **services/** are QML singletons holding state + system integration.
+- **shell.qml** is the root. It owns the IPC handler, Hyprland global shortcuts, and lazily
+  instantiates every overlay window via `Loader` (windows only exist while their state
+  singleton says they are active). Commands are routed through the `CommandRouter` singleton.
+- **services/** are QML singletons holding state + system integration; `CommandRouter.qml`
+  centralizes every IPC / shortcut / command received by the shell.
 - **bar/** renders the top bar and hosts all menus/popups as children.
 - **scripts/** contains all external-process logic; QML never calls system tools directly.
 - **Settings/** persists user preferences to a single JSON file.
@@ -23,7 +24,7 @@ Bar clicks ──────┘                                        └─�
 
 ## 1. Entry Points — How Features Are Triggered
 
-All popups funnel through one dispatcher, `handleCommand()` in `shell.qml`, reached three ways:
+All popups funnel through one dispatcher, `handleCommand()` in `services/CommandRouter.qml`, reached three ways:
 
 | Trigger | Path |
 |---|---|

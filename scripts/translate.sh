@@ -1,9 +1,13 @@
 #!/usr/bin/env bash
-# Keyless translation via Google's unofficial translate endpoint.
+# Keyless translation via Google's clients5 dict-chrome-ex endpoint.
 # Usage: translate.sh <src> <tgt> <text...>
 #   <src> = language code, or "auto" for automatic detection
 # Prints JSON: {"translatedText": "...", "detectedLang": "xx", "sourceText": "..."}
 # On failure prints: {"error": "..."}
+#
+# Note: the old translate_a/single?client=gtx endpoint returns HTTP 429
+# (abuse page); clients5.google.com with client=dict-chrome-ex still works.
+# Response shape varies: [["text","lang"]] with sl=auto, ["chunk",...] otherwise.
 
 set -o pipefail
 
@@ -19,8 +23,8 @@ fi
 
 ENCODED=$(printf '%s' "$TEXT" | jq -sRr @uri)
 
-RESP=$(curl -s --max-time 8 \
-  "https://translate.googleapis.com/translate_a/single?client=gtx&dt=t&sl=${SRC}&tl=${TGT}&q=${ENCODED}" 2>/dev/null)
+RESP=$(curl -sf --max-time 8 \
+  "https://clients5.google.com/translate_a/t?client=dict-chrome-ex&sl=${SRC}&tl=${TGT}&q=${ENCODED}" 2>/dev/null)
 
 if [ -z "$RESP" ]; then
   echo '{"error":"Network request failed"}'
@@ -28,6 +32,12 @@ if [ -z "$RESP" ]; then
 fi
 
 echo "$RESP" | jq -r --arg src "$TEXT" '
-  ([ .[0][]? | .[0] // "" ] | join("")) as $t
-  | { translatedText: $t, detectedLang: (.[2] // ""), sourceText: $src }' \
+  def emit($t; $l): { translatedText: $t, detectedLang: $l, sourceText: $src };
+  if (.[0] | type) == "array"
+  then ([.[] | .[0] // ""] | join("")) as $t
+       | (.[0][1] // "") as $l
+       | emit($t; $l)
+  else (map(. // "") | join("")) as $t
+       | emit($t; "")
+  end' \
   || echo '{"error":"Could not parse translation response"}'

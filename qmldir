@@ -22,3 +22,4 @@ singleton ProductivityService services/ProductivityService.qml
 singleton WeatherService services/WeatherService.qml
 singleton TranslateService services/TranslateService.qml
 singleton DynamicIslandService services/DynamicIslandService.qml
+singleton CommandRouter services/CommandRouter.qml

@@ -141,7 +141,8 @@ Rectangle {
                                 text: {
                                     let id = modelData.identity.toLowerCase();
                                     if (id.includes("firefox")) return "󰈹";
-                                    if (id.includes("chrom") || id.includes("zen")) return "󰊯";
+                                    if (id.includes("zen")) return "󰈹";
+                                    if (id.includes("chrom")) return "󰊯";
                                     if (id.includes("spotify")) return "󰓇";
                                     if (id.includes("vlc")) return "󰕼";
                                     return "󰝚";

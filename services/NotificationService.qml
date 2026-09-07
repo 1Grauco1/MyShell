@@ -18,8 +18,27 @@ Item {
     signal notificationDismissed(real id)
     signal osdReceived(string type, real value)
 
+    // When the OSD slider writes a value, suppress the resulting service
+    // change event so it doesn't loop back and re-show the OSD.
+    property var _skipType: ({})
+
+    function skipNextOSD(type) {
+        let copy = _skipType;
+        copy[type] = Date.now();
+        _skipType = copy;
+    }
+
+    function registerOSD(type, value) {
+        let last = _skipType[type];
+        if (last !== undefined && Date.now() - last < 800) {
+            return;
+        }
+        root.osdReceived(type, value);
+    }
+
     function updateOSDValue(type, value) {
         let percent = Math.round(value * 100);
+        root.skipNextOSD(type);
         if (type === "volume")
             shellExec.command = ["wpctl", "set-volume", "@DEFAULT_AUDIO_SINK@", percent + "%"];
         else if (type === "brightness")

@@ -18,6 +18,11 @@ PanelWindow {
     property real osdValue: 0
     property var barRef: null
 
+    // Responsive sizing: tighter in fullscreen, compact elsewhere.
+    readonly property bool compact: isFullscreen || osdWindow.width < Theme.scaled(200)
+    readonly property real pad: Theme.scaled(compact ? 10 : 16)
+    readonly property real barH: Theme.scaled(compact ? 4 : 6)
+
     WlrLayershell.layer: WlrLayer.Overlay
     WlrLayershell.keyboardFocus: WlrKeyboardFocus.None
 
@@ -28,29 +33,42 @@ PanelWindow {
     }
 
     WlrLayershell.margins {
-        top: osdWindow.isFullscreen ? - (barRef ? barRef.height : Theme.barHeight) : Theme.scaled(10)
-        right: osdWindow.isFullscreen ? Theme.scaled(5) : Theme.scaled(10)
+        top: Theme.scaled(12)
+        right: osdWindow.isFullscreen ? Theme.scaled(6) : Theme.scaled(12)
     }
 
-    implicitWidth: Theme.scaled(400)
-    implicitHeight: osdWindow.isFullscreen ? Theme.scaled(65) : Theme.scaled(85)
-    
-    // Window stays visible if timer is running OR if the mouse is hovering/pressing
-    visible: (osdTimer.running || content.opacity > 0 || mainMouseArea.containsMouse) && (!osdWindow.isFullscreen || osdWindow.useFullscreenLayout)
+    // Grows with the slider but never exceeds a cap.
+    implicitWidth: Math.min(Theme.scaled(280), contentRow.implicitWidth + pad * 2)
+    implicitHeight: Theme.scaled(compact ? 48 : 64)
+
+    // Always appears, even in fullscreen.
+    visible: osdTimer.running || contentWrapper.opacity > 0 || mainMouseArea.containsMouse
     color: "transparent"
 
+    // Accessible contentRow height for width estimation
+    RowLayout {
+        id: contentRow
+        anchors.fill: parent
+        anchors.margins: osdWindow.pad
+        spacing: Theme.scaled(compact ? 8 : 12)
+        visible: false
+        Rectangle { width: Theme.scaled(28); height: Theme.scaled(28) }
+        Item { width: Theme.scaled(40); height: 1 }
+        Item { width: Theme.scaled(30); height: 1 }
+    }
+
     Rectangle {
-        id: content
+        id: contentWrapper
         anchors.fill: parent
         color: Theme.glassBackground
-        radius: Theme.scaled(20)
+        radius: Theme.scaled(compact ? 12 : 18)
         border.color: Theme.glassBorder
         border.width: 1
         clip: true
-        // Fade logic: Stay visible on hover
-        opacity: (osdTimer.running || mainMouseArea.containsMouse) ? 1 : 0
 
-        // This mouse area detects hover to keep the OSD alive
+        opacity: (osdTimer.running || mainMouseArea.containsMouse) ? 1 : 0
+        Behavior on opacity { NumberAnimation { duration: 160 } }
+
         MouseArea {
             id: mainMouseArea
             anchors.fill: parent
@@ -59,105 +77,77 @@ PanelWindow {
             onExited: osdTimer.restart()
         }
 
-        ColumnLayout {
+        RowLayout {
             anchors.fill: parent
-            anchors.margins: osdWindow.isFullscreen ? Theme.scaled(9) : Theme.scaled(18)
-            spacing: osdWindow.isFullscreen ? Theme.scaled(4) : Theme.scaled(8)
-            z: 2 // Keep content above mouse area
+            anchors.margins: osdWindow.pad
+            spacing: Theme.scaled(compact ? 8 : 12)
+            z: 2
 
-            RowLayout {
+            // Icon (no box, minimal)
+            Text {
+                id: osdIcon
+                font.pixelSize: Theme.scaled(compact ? 16 : 20)
+                font.family: Theme.iconFont
+                color: (osdValue <= 0) ? Theme.powerRed
+                       : (osdType === "volume" && osdValue > 1.0 ? Theme.powerYellow : Theme.powerGreen)
+                text: {
+                    if (osdType === "brightness") {
+                        if (osdValue <= 0.33) return "󰃞"; if (osdValue <= 0.66) return "󰃟"; return "󰃠"
+                    }
+                    if (osdType === "volume") {
+                        if (osdValue <= 0) return "󰝟"; if (osdValue <= 0.33) return "󰕿";
+                        if (osdValue <= 0.66) return "󰖀"; if (osdValue <= 1.0) return "󰕾"; return "󰓃"
+                    }
+                    return "󰋽"
+                }
+            }
+
+            // Track (thin bar, no box, no handle)
+            Item {
                 Layout.fillWidth: true
-                spacing: osdWindow.isFullscreen ? Theme.scaled(8) : Theme.scaled(12)
+                Layout.preferredHeight: osdWindow.barH
+                implicitHeight: osdWindow.barH
 
                 Rectangle {
-                    width: osdWindow.isFullscreen ? Theme.scaled(16) : Theme.scaled(32); 
-                    height: osdWindow.isFullscreen ? Theme.scaled(16) : Theme.scaled(32); 
-                    radius: osdWindow.isFullscreen ? Theme.scaled(4) : Theme.scaled(8); 
-                    color: Colors.surface
-                    Text {
-                        anchors.centerIn: parent
-                        font.pixelSize: osdWindow.isFullscreen ? Theme.scaled(14) : Theme.scaled(18)
-                        color: (osdValue <= 0) ? Theme.powerRed : (osdType === "volume" && osdValue > 1.0 ? Theme.powerYellow : Theme.powerGreen)
-                        text: {
-                            if (osdType === "brightness") {
-                                if (osdValue <= 0.33) return "󰃞"; if (osdValue <= 0.66) return "󰃟"; return "󰃠"
-                            } 
-                            if (osdType === "volume") {
-                                if (osdValue <= 0) return "󰝟"; if (osdValue <= 0.33) return "󰕿"; 
-                                if (osdValue <= 0.66) return "󰖀"; if (osdValue <= 1.0) return "󰕾"; return "󰓃"
-                            }
-                            return "󰋽"
-                        }
+                    anchors.fill: parent
+                    radius: height / 2
+                    color: Colors.surface_container_high
+                }
+                Rectangle {
+                    anchors { left: parent.left; top: parent.top; bottom: parent.bottom }
+                    width: parent.width * osdWindow.osdValue
+                    radius: height / 2
+                    color: (osdValue > 1.0 ? Theme.powerYellow
+                           : osdValue <= 0 ? Theme.powerRed : Theme.powerGreen)
+                    Behavior on width { NumberAnimation { duration: 120; easing.type: Easing.OutCubic } }
+                }
+
+                MouseArea {
+                    anchors.fill: parent
+                    onClicked: (mouse) => {
+                        let v = mouse.x / width;
+                        v = Math.max(0, Math.min(1, v));
+                        osdWindow.osdValue = v;
+                        NotificationService.updateOSDValue(osdWindow.osdType, v);
+                        osdTimer.restart();
                     }
-                }
-
-                Text {
-                    text: osdType.toUpperCase()
-                    color: Colors.primary; font.weight: Font.Black; font.pixelSize: Theme.scaled(12); font.letterSpacing: 2
-                    Layout.fillWidth: true
-                }
-
-                Text {
-                    text: Math.round(osdValue * 100) + "%"
-                    color: Colors.on_background; font.family: Constants.monoFont; font.weight: Font.Bold; font.pixelSize: osdWindow.isFullscreen ? Theme.scaled(11) : Theme.scaled(13)
                 }
             }
 
-            Slider {
-                id: osdSlider
-                Layout.fillWidth: true
-                from: 0; to: 1
-                value: osdWindow.osdValue
-                hoverEnabled: true
-
-                // Reset all paddings for pixel-perfect alignment
-                padding: 0
-                leftPadding: 0
-                rightPadding: 0
-                topPadding: 0
-                bottomPadding: 0
-
-                readonly property real handleWidth: osdWindow.isFullscreen ? Theme.scaled(12) : Theme.scaled(14)
-                
-                // --- Re-enabled functionality ---
-                onMoved: {
-                    osdTimer.restart();
-                    osdWindow.osdValue = value;
-                    NotificationService.updateOSDValue(osdWindow.osdType, value);
-                }
-
-                background: Rectangle {
-                    x: osdSlider.leftPadding + osdSlider.handleWidth /1
-                    y: osdWindow.isFullscreen ? osdSlider.topPadding + (osdSlider.availableHeight - height) / 5 : osdSlider.topPadding + (osdSlider.availableHeight - height) / 2
-                    implicitHeight: osdWindow.isFullscreen ? Theme.scaled(8) : Theme.scaled(10)
-                    width: osdSlider.availableWidth - osdSlider.handleWidth
-                    radius: Theme.scaled(3); color: Colors.surface
-                    Rectangle {
-                        width: osdSlider.visualPosition * parent.width
-                        height: osdWindow.isFullscreen ? Theme.scaled(12) : parent.height
-                        color: osdValue > 1.0 ? Theme.powerYellow : Theme.powerGreen
-                        radius: Theme.scaled(30)
-                    }
-                }
-
-                handle: Rectangle {
-                    x: osdSlider.leftPadding + osdSlider.visualPosition * (osdSlider.availableWidth - width)
-                    y: osdSlider.topPadding + (osdSlider.availableHeight - height) / 2
-                    implicitWidth: osdSlider.handleWidth; implicitHeight: osdWindow.isFullscreen ? Theme.scaled(12) : Theme.scaled(14); radius: width / 2
-                    color: Colors.on_background; border.color: Colors.surface_variant
-
-                    scale: osdSlider.pressed ? 1.3 : (osdSlider.hovered ? 1.2 : 1.1)
-                    Behavior on scale { NumberAnimation { duration: 100 } }
-                }
+            // Percent label
+            Text {
+                text: Math.round(osdWindow.osdValue * 100) + "%"
+                color: Colors.on_background
+                font.family: Constants.monoFont
+                font.weight: Font.Bold
+                font.pixelSize: Theme.scaled(compact ? 11 : 13)
             }
         }
-
-        Behavior on opacity { NumberAnimation { duration: 200 } }
     }
 
     Timer {
         id: osdTimer
-        interval: 2500 // Increased slightly for comfort
+        interval: 1800 // snappier hide
     }
 
     Connections {
